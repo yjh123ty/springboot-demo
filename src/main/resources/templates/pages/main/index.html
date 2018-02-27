@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<title>Dashboard | Klorofil - Free Bootstrap Dashboard Template</title>
+	<#include "/pages/common/header.html">
+</head>
+
+<body>
+	<!-- WRAPPER -->
+	<div id="wrapper">
+		<!-- NAVBAR -->
+		<#include "/pages/common/navbar.html">
+		<!-- NAVBAR END -->
+		
+		<!-- LEFT SIDEBAR -->
+		<div id="sidebar-nav" class="sidebar">
+			<div class="sidebar-scroll">
+				<nav>
+					<ul class="nav" id="main-menu">
+						<#if  Session["menus"]??>
+							<#list menus as menu>
+									<#if menu.parentId??>
+									
+									<#else>
+										<#if menu.url??>
+											<li data-url="${(menu.url?html)!}">
+										<#else>
+											<li>
+										</#if>
+										<a 
+											<#if menu.url??>
+												href="${(menu.url?html)!}"
+												target="mainIframe"
+											<#else>
+												href="#subPages-${menu.id}"
+												data-toggle="collapse" 
+												class="collapsed"
+											</#if>
+										>
+											<#if menu.urlIcon??>
+												<i class='${(menu.urlIcon?html)!}'></i>
+											</#if>
+											<span>${(menu.name?html)!}</span>
+											
+											<#if menu.url??>
+											<#else>
+												<i class="icon-submenu lnr lnr-chevron-left"></i>
+											</#if>
+										</a>
+											<!-- 设置子菜单 -->
+											<#if menu.url??>
+													
+											<#else>
+												<div id="subPages-${menu.id}" class="collapse subPages">
+													<ul class="nav"></ul>
+												</div>
+											</#if>
+										</li>
+									</#if>
+								</#list>
+							</#if>
+							<li>
+								<a href="#subPages" data-toggle="collapse" class="collapsed"><i class="lnr lnr-file-empty"></i> <span>Pages</span> <i class="icon-submenu lnr lnr-chevron-left"></i></a>
+								<div id="subPages" class="collapse ">
+									<ul class="nav">
+										<li><a href="page-profile.html" class="">Profile</a></li>
+										<li><a href="page-login.html" class="">Login</a></li>
+										<li><a href="page-lockscreen.html" class="">Lockscreen</a></li>
+									</ul>
+								</div>
+							</li>
+						</ul>
+					</nav>
+				</div>
+		</div>
+		<!-- END LEFT SIDEBAR -->
+		
+		<!-- MAIN -->
+		<div class="main">
+			<!-- MAIN CONTENT -->
+			<div class="main-content" style="height:900px">
+				<!-- 固定的容器中iframe宽高100%撑满容器，iframe超出部分出现滚动条 -->
+				<iframe name="mainIframe" id="mainIframe" frameborder="0" scrolling="auto" style="width: 100%; height: 100%;" ></iframe>  
+			</div>
+			<!-- END MAIN CONTENT -->
+		</div>
+		<!-- END MAIN -->
+		<#include "/pages/common/footer.html"/>
+	</div>
+	<!-- END WRAPPER -->
+<!-- Javascript -->
+<#include "/pages/common/common.html"/>
+<!-- 设置子菜单 -->
+<script type="text/javascript">
+
+function openTreeItem(url,param){
+	// 根据url地址找到 菜单项
+	if(url) {
+		var item = $("#main-menu").find("[data-url='" + url +"']");
+		if(item){
+			item.parent().collapse('open');
+			var paramStr = '';
+			if(param){
+				paramStr = parseParam(param);
+			}
+			if(paramStr) {
+				$("#mainIframe").attr("src", url+"?"+paramStr);
+			}else {
+				$("#mainIframe").attr("src", url);
+			}
+		}
+	}
+}
+
+	$(function(){
+		
+		//拼接子菜单
+		<#if  Session["menus"]??>
+			<#list menus as menu>
+				var parentId = '${(menu.parentId?html)!}';
+				var menuUrl = '${(menu.url?html)!}';
+				if(parentId != "" && parentId != null && menuUrl != "" && menuUrl != null){
+					//找到子菜单对应的主菜单
+					var mainMenu = $("#subPages-"+parentId);
+					var ul = mainMenu.find("ul");
+					var menuName = '${(menu.name?html)!}';
+					var li = '<li data-url="'+ menuUrl +'" style="margin-left:20px"><a href="'+ menuUrl +'" target="mainIframe">' + menuName + '</li>';
+					ul.append(li);
+				}
+			</#list>
+			$("#mainIframe").attr("src", "/main/index.html");
+			openTreeItem("/main/index.html");
+		</#if>
+		
+	});
+	
+	//菜单点击事件
+	var mainIframe = $("#mainIframe");
+	$("#main-menu").on("click", "li", function(event){
+		var url = $(this).attr("data-url");
+		if(mainIframe.prop("src") != url) {
+			mainIframe.prop("src",url);
+			//清除所有a标签的活动样式
+			$("#main-menu li a").removeClass("active").addClass("collapsed");
+			var a = $(this).find("a");
+			a.attr("data-toggle","collapse");
+			a.addClass("active");
+		}
+	});
+	
+</script>
+</body>
+
+</html>

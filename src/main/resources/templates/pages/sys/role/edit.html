@@ -1,0 +1,150 @@
+<div id="editModal1" class="modal fade ">
+    <div class="modal-dialog modal-lg" style="width: 600px;">
+	    <div class="modal-content">
+	        <div class="modal-header">
+	        	<#if role??>
+                	<h4 class="modal-title">编辑角色</h4>
+	        	<#else>
+	        		<h4 class="modal-title">新增角色</h4>
+	        	</#if>
+            </div>
+            <div class="modal-body">
+				<form id="addForm" class="form-horizontal" role="form">
+					<div class="form-body">
+						<div class="form-group">
+							<label class="col-sm-3 control-label" style="position: relative;">
+								<span style="position: absolute; color: #f6675d; left: 80px">*</span>
+								角色名
+							</label>
+							<div class="col-sm-3">
+								<div class="fg-line">
+									<input type="text" id="role" class="form-control" style="width: 100px; height: 31px">
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label" style="position: relative;">
+								<span style="position: absolute; color: #f6675d; left: 80px">*</span>
+								状态
+							</label>
+							<div class="col-sm-3">
+								<div class="fg-line">
+									<select id="available" class="selectpicker" style="width:120px; height: 31px">
+	                                      <option value="">--请选择--</option>
+	                                      <option value="true">正常</option>
+	                                      <option value="false">停用</option>
+	                                  </select>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label" style="position: relative;">
+								描述
+							</label>
+							<div class="col-sm-6">
+								<div class="fg-line">
+									<input type="text" id="description" class="form-control" style="width: 200px; height: 31px" >
+								</div>
+							</div>
+						</div>
+						<div class="form-group" id="permGroup">
+							<label class="col-sm-3 control-label" style="position: relative;">
+								权限配置
+							</label>
+							<div class="col-sm-3">
+								<div class="fg-line">
+									<a id="editPermsBtn" class="btn btn-info">选择权限</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+		    </div>
+		    <div class="modal-footer">
+		        <button type="button" class="btn btn-info" id="save" data-dismiss="modal">保存</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+		</div>
+    </div>
+    <script type="text/javascript">
+    	function validation(){
+			var role = $("#role").val();
+			if (role == "") {
+				app.alertErr('角色名不能为空！');
+				return false;
+			}
+			var available = $("#available").val();
+			if (available == "") {
+				app.alertErr('状态不能为空！');
+				return false;
+			}
+    		return true;
+    	}
+    	
+		$(function(){
+			var roleId;
+			<#if role??>
+				roleId = '${role.id}';
+				$("#role").val('${role.role}');
+				$("#description").val('${role.description}');
+				var availableValue = '${(role.available)?string("true", "false")}';
+				//刷新选择控件
+				$("#available").find("option[value='" + availableValue + "']").attr("selected",true);
+				$('#available').selectpicker('refresh');
+				
+				//TODO： 优化思路，点击选择权限 按钮的时候，提交当前新角色的信息入库
+				$("#permGroup").show();
+			<#else>
+				$("#role").empty();
+				$("#description").empty();
+				$('#available').selectpicker();
+				
+				$("#permGroup").hide();
+	    	</#if>
+	    	
+	    	$("#editPermsBtn").click(function(){
+				app.showAjaxModal("/sysRole/editPerms?id="+roleId);
+			});
+	    	
+			/*提交*/
+			$("#save").click(function(){
+            	if(validation()){
+            		var data = {
+           				id : roleId,
+           				role : $("#role").val() ,
+           				available : $("#available").val(),
+           				description : $.trim($("#description").val())
+            		}
+            		console.log("data : "+ data);
+            		app.ajax({
+                		url : '/sysRole/saveOrUpdate',
+                		type : 'POST',
+        				data : data,
+        				success : function(resp){
+        					if(resp){
+                                app.alertOk("操作成功");
+                               	$('#list #data-role-'+roleId).text($("#addForm #role").val());
+                                $('#list #data-des-'+roleId).text($("#addForm #description").val());
+                                $('#list #data-ava-'+roleId).text($("#available option:selected").text());
+                                
+                                if($("#available option:selected").val() == 'false'){
+                                	$('#list #data-ava-'+roleId).removeClass().addClass("label").addClass("label-danger");
+                                }else if($("#available option:selected").val() == 'true'){
+                                	$('#list #data-ava-'+roleId).removeClass().addClass("label").addClass("label-success");
+                                }else{
+                                	 $('#list #data-ava-'+roleId).text("");
+                                }
+                                $("#editModal1").modal("hide");
+                            }
+        				},
+        				error : function(){
+        					flag = true;
+        				}
+                	});
+            	}
+            });
+		})
+		
+		
+    </script>
+</div>

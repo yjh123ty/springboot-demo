@@ -1,0 +1,170 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD com.example.mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yoga.demo.mapper.user.UserInfoMapper">
+
+	<resultMap id="userMap" type="com.yoga.demo.domain.shiro.UserInfo">
+		<id column="uid" jdbcType="INTEGER" property="uid" />
+	    <result column="username" jdbcType="VARCHAR" property="username" />
+	    <result column="name" jdbcType="VARCHAR" property="name" />
+	    <result column="password" jdbcType="VARCHAR" property="password" />
+	    <result column="idNo" jdbcType="VARCHAR" property="idNo" />
+	    <result column="state" jdbcType="VARCHAR" property="state" />
+	    <result column="email" jdbcType="VARCHAR" property="email" />
+	    <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+	    <result column="id_no" jdbcType="VARCHAR" property="idNo" />
+	    <result column="head_icon" jdbcType="VARCHAR" property="headIcon" />
+	    <result column="is_delete" jdbcType="VARCHAR" property="isDelete" />
+	    <result column="create_time" property="createTime" />
+	    
+	    <collection property="roleList" ofType="com.yoga.demo.domain.shiro.SysRole" columnPrefix="r_">
+	     <result column="id" property="id" />
+         <result column="role" property="role" />
+         <result column="description" property="description" />
+	    </collection>
+	    
+	    <collection property="roleIds" ofType="int" columnPrefix="i_">
+         <result column="id" property="id" />
+	    </collection>
+	</resultMap>
+
+	<insert id="save" parameterType="com.yoga.demo.domain.shiro.UserInfo" keyProperty="uid" useGeneratedKeys="true">
+		insert into user_info (username , name , password ,state ,create_time)
+		values(#{username} ,#{name} ,#{password} ,#{state}, NOW())
+	</insert>
+	
+	<insert id="saveUserRole">
+		insert into sys_user_role (role_id , uid)
+		values(#{roleId} ,#{uid})
+	</insert>
+	
+	<delete id="deleteUserRole" parameterType="int">
+		delete from sys_user_role
+		where uid = #{uid} 
+	</delete>
+	
+	<update id="update" parameterType="com.yoga.demo.domain.shiro.UserInfo">
+		update user_info
+		<set>
+			<if test="username != null and username !=''">
+				username = #{username},
+			</if>
+			<if test="name != null and name !=''">
+				name = #{name},
+			</if>
+			<if test="password != null and password !=''">
+				password = #{password},
+			</if>
+			<if test="email != null and email !=''">
+				email = #{email},
+			</if>
+			<if test="mobile != null and mobile !=''">
+				mobile = #{mobile},
+			</if>
+			<if test="idNo != null and idNo !=''">
+				id_no = #{idNo},
+			</if>
+			<if test="headIcon != null and headIcon !=''">
+				head_icon = #{headIcon},
+			</if>
+			<if test="state != null and state !=''">
+				state = #{state},
+			</if>
+		</set>	
+		where uid = #{uid}
+	</update>
+	
+	<update id="delete" parameterType="int">
+		update user_info
+		set is_delete = 1
+		where uid = #{uid}
+	</update>
+	
+	<sql id="selectfilter">
+		<where>
+			is_delete = 0
+			<if test="username != null">
+				AND username like concat("%", #{username}, "%")
+			</if>
+			<if test="name != null">
+				AND name like concat("%", #{name}, "%")
+			</if>
+			<if test="state != null">
+				AND state = #{state}
+			</if>
+			
+		</where>
+	</sql>
+	
+    <select id="findByUsername" resultType="com.yoga.demo.domain.shiro.UserInfo" parameterType="java.lang.String">
+        SELECT
+        	*
+        FROM user_info
+        where username = #{username} AND is_delete = 0
+    </select>
+    
+    <select id="findUserInfoByUsername" resultMap="userMap" parameterType="java.lang.String">
+        SELECT
+        	u.*
+        	,r.id r_id
+        	,r.role r_role
+        	,r.description r_description
+        	,i.id i_id
+        FROM user_info u
+        LEFT JOIN sys_user_role ur ON u.uid = ur.uid
+        LEFT JOIN sys_role r ON r.id = ur.role_id 
+        LEFT JOIN sys_role i ON i.id = ur.role_id 
+        where username = #{username} AND is_delete = 0 
+    </select>
+    
+    <select id="findPermissions" resultType="string" parameterType="int">
+    	select p.permission
+    	from sys_permission p
+		LEFT JOIN sys_role_permission rp ON p.id = rp.permission_id
+		LEFT JOIN sys_role r ON r.id = rp.role_id 
+		LEFT JOIN sys_user_role ur ON ur.role_id = r.id
+		where ur.uid = #{uid} AND r.available = 1 
+    </select>	
+    
+    <select id="listUsers" resultMap="userMap" parameterType="com.yoga.demo.domain.dto.UserInfoSearchDTO">
+        select * from user_info
+        <include refid="selectfilter"/>
+        <choose>
+	        <when test="orderBy != null">
+	            ORDER BY ${orderBy} ${orderSort}
+	        </when>
+	        <otherwise>
+	            ORDER BY uid ASC
+	        </otherwise>
+	    </choose>
+	    <choose>
+	        <when test="start &lt; 0 or pageSize &lt; 0"></when>
+	        <otherwise>limit #{start},#{pageSize}</otherwise>
+	    </choose>
+        
+    </select>
+    
+    <select id="countUsers" resultType="int" parameterType="com.yoga.demo.domain.dto.UserInfoSearchDTO">
+    	select count(uid) from user_info 
+    	<include refid="selectfilter"/>
+    </select>
+    
+    <select id="selectByPrimaryKey" resultMap="userMap" parameterType="int">
+    	SELECT
+        	u.*
+        	,r.id r_id
+        	,r.role r_role
+        	,r.description r_description
+        	,i.id i_id
+        FROM user_info u
+        LEFT JOIN sys_user_role ur ON u.uid = ur.uid
+        LEFT JOIN sys_role r ON r.id = ur.role_id 
+        LEFT JOIN sys_role i ON i.id = ur.role_id 
+		where u.uid = #{uid} AND is_delete = 0 
+    </select>
+    
+    	
+
+</mapper>

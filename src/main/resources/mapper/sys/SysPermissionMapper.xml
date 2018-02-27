@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yoga.demo.mapper.permission.SysPermissionMapper" >
+  <resultMap id="BaseResultMap" type="com.yoga.demo.domain.shiro.SysPermission" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="available" property="available" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="parent_id" property="parentId" jdbcType="INTEGER" />
+    <result column="parent_ids" property="parentIds" jdbcType="VARCHAR" />
+    <result column="permission" property="permission" jdbcType="VARCHAR" />
+    <result column="resource_type" property="resourceType" jdbcType="VARCHAR" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="last_update_user_id" property="lastUpdateUserId" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, available, name, parent_id, parent_ids, permission, resource_type, url, last_update_user_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_permission
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <update id="deleteByPrimaryKey">
+    update sys_permission set available = 0, last_update_user_id = #{userId}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <insert id="insert" parameterType="com.yoga.demo.domain.shiro.SysPermission" >
+    insert into sys_permission (id, available, name, 
+      parent_id, parent_ids, permission, 
+      resource_type, url, last_update_user_id)
+    values (#{id,jdbcType=INTEGER}, #{available,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{parentId,jdbcType=INTEGER}, #{parentIds,jdbcType=VARCHAR}, #{permission,jdbcType=VARCHAR}, 
+      #{resourceType,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, #{lastUpdateUserId,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yoga.demo.domain.shiro.SysPermission" >
+    insert into sys_permission
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="available != null" >
+        available,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="parentId != null" >
+        parent_id,
+      </if>
+      <if test="parentIds != null" >
+        parent_ids,
+      </if>
+      <if test="permission != null" >
+        permission,
+      </if>
+      <if test="resourceType != null" >
+        resource_type,
+      </if>
+      <if test="url != null" >
+        url,
+      </if>
+      <if test="lastUpdateUserId != null" >
+        last_update_user_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="available != null" >
+        #{available,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null" >
+        #{parentId,jdbcType=INTEGER},
+      </if>
+      <if test="parentIds != null" >
+        #{parentIds,jdbcType=VARCHAR},
+      </if>
+      <if test="permission != null" >
+        #{permission,jdbcType=VARCHAR},
+      </if>
+      <if test="resourceType != null" >
+        #{resourceType,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null" >
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="lastUpdateUserId != null" >
+        #{lastUpdateUserId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yoga.demo.domain.shiro.SysPermission" >
+    update sys_permission
+    <set >
+      <if test="available != null" >
+        available = #{available,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null" >
+        parent_id = #{parentId,jdbcType=INTEGER},
+      </if>
+      <if test="parentIds != null" >
+        parent_ids = #{parentIds,jdbcType=VARCHAR},
+      </if>
+      <if test="permission != null" >
+        permission = #{permission,jdbcType=VARCHAR},
+      </if>
+      <if test="resourceType != null" >
+        resource_type = #{resourceType,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null" >
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="lastUpdateUserId != null" >
+        last_update_user_id = #{lastUpdateUserId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yoga.demo.domain.shiro.SysPermission" >
+    update sys_permission
+    set available = #{available,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=INTEGER},
+      parent_ids = #{parentIds,jdbcType=VARCHAR},
+      permission = #{permission,jdbcType=VARCHAR},
+      resource_type = #{resourceType,jdbcType=VARCHAR},
+      url = #{url,jdbcType=VARCHAR},
+      last_update_user_id = #{lastUpdateUserId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="listAllPermissions" resultMap="BaseResultMap">
+  	select * from sys_permission where available = 1
+  </select>
+  
+  <select id="list" resultMap="BaseResultMap" parameterType="com.yoga.demo.domain.shiro.dto.SysPermSearchDTO">
+  	select * from sys_permission 
+  	where available = 1
+  	<if test="id != null">
+  		AND id = #{id}
+  	</if>
+  	<if test="name != null">
+  		AND name = #{name}
+  	</if>
+  	<choose>
+            <when test="start &lt; 0 or pageSize &lt; 0"></when>
+            <otherwise>LIMIT #{start}, #{pageSize}</otherwise>
+     </choose>
+  </select>
+  
+  <select id="countList" resultType="int" parameterType="com.yoga.demo.domain.shiro.dto.SysPermSearchDTO">
+  	select COUNT(id) from sys_permission
+  	where available = 1
+  	<if test="id != null">
+  		AND id = #{id}
+  	</if>
+  	<if test="name != null">
+  		AND name = #{name}
+  	</if>
+  </select>
+</mapper>

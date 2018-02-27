@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>根据关键字本地搜索</title>
+	<#include "/pages/common/header.html">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	<style type="text/css">
+		body, html {width: 100%;height: 90%;margin:0;font-family:"微软雅黑";}
+		
+		#allmap{
+			width:100%;
+			height:600px;
+		}
+		
+		p{margin-left:5px; font-size:14px;}
+		
+		
+	</style>
+</head>
+<body>
+		<div style="margin-bottom:10px">
+			<span >返回关键字的检索结果，并展示在地图上</span>
+			<br/>
+			<div class="input-group">
+				<input id="searchCity" class="form-control" placeholder="请输入要查询的城市" style="width:180px; margin-right:10px"/>
+				<input id="searchKey" class="form-control" placeholder="请输入要查询的地址" style="width:180px"/>
+				<button type="button" class="btn" id="searBtn" onclick="search()">搜索</button>
+			</div>
+		</div>
+		<div id="allmap"></div>
+</body>
+	<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=B9UFVPQK5qn32165zp704FL2S4V5aHQ1&callback=init"></script>
+	<!-- Javascript -->
+	<#include "/pages/common/common.html"/>
+</html>
+
+<script type="text/javascript">
+	
+	var city ;
+	//初始化
+	function init(param){
+		console.log("init paramCity :" + searchCity);
+		console.log("init paramCity :" + (param == "" && param == null));
+		var paramCity = (param == "" || param == null) ? "绵阳" : param;
+		console.log("paramCity :" + paramCity);
+		var map = new BMap.Map("allmap");          
+		map.centerAndZoom(paramCity,13);     //初始化地图,设置城市和地图级别。            
+		map.enableScrollWheelZoom();  
+		
+		city = paramCity;
+	}
+	
+	//搜索
+	function search(){
+		var searchCity = $("#searchCity").val();
+		console.log("search city : " + $("#searchCity").val());
+		init(searchCity);
+		var map = new BMap.Map("allmap");   
+		map.enableScrollWheelZoom();
+		 var searchKey = $("#searchKey").val();
+		 console.log("city + searchKey : " + city + searchKey);
+		 
+		if(searchKey){
+			var local = new BMap.LocalSearch(map, {
+				renderOptions:{map: map}
+			});
+			local.search(city + searchKey);
+		}else{
+			alert("请输入搜索的关键字");
+			init(searchCity);
+		}
+	}
+	
+		//1、传入两个地址的名称，将其解析为坐标
+// 		var pointA = new BMap.Point(106.486654,29.490295);  // 创建点坐标A--大渡口区
+// 		var pointB = new BMap.Point(106.581515,29.615467);  // 创建点坐标B--江北区
+// 		//2、获取两点的距离 ： (map.getDistance(pointA,pointB)).toFixed(2)
+// 		alert("两点之间的距离为：" + (map.getDistance(pointA,pointB).toFixed(2)) / 1000 + " 公里。");
+	
+</script>

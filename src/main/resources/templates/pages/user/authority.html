@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>用户认证</title>
+	<#include "/pages/common/header.html">
+</head>
+<body>
+<style type="text/css">
+	#addForm{
+		margin-top:15px;
+	}
+	
+</style>
+		<div class="container-fluid">
+			<h3 class="page-title">用户认证</h3>
+			<div class="row">
+				<div class="col-md-12">
+					<!-- TABLE STRIPED -->
+					<div class="panel">
+						<div class="panel-body">
+							<form id="addForm" method="post" action="/auth/authorize" class="form-horizontal"  enctype="multipart/form-data"
+							 role="form" onsubmit="return validation()">
+					    		<input type="hidden" name="uid" value="${uid}" />
+								<div class="form-body">
+									<div class="form-group">
+										<label class="col-sm-2 control-label" >
+											<span style="position: relative; color: #f6675d; ">*</span>
+											手机号
+										</label>
+										<div class="col-sm-3">
+											<div class="fg-line">
+												<input type="text" id="mobile" name="mobile" class="form-control" style="width: 150px; height: 31px">
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label" >
+											<span style="position:relative; color: #f6675d;">*</span>
+											身份证
+										</label>
+										<div class="col-sm-3">
+											<div class="fg-line">
+												<input type="text" id="idNo" name="idNo" class="form-control" style="width: 200px; height: 31px">
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label" >
+											邮箱
+										</label>
+										<div class="col-sm-3">
+											<div class="fg-line">
+												<input type="text" id="email" name="email" class="form-control" style="width: 200px; height: 31px">
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-2 control-label" >
+											上传头像
+										</label>
+										<div class="col-sm-3">
+											<div class="fg-line">
+												<input id="headIcon" type="file" name="file" accept="image/gif,image/jpeg,image/jpg,image/png" />
+											</div>
+										</div>
+									</div>
+								</div>
+							<div class="modal-footer">
+						        <button type="submit" class="btn btn-info" id="save">提交</button>
+				                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+				            </div>
+							</form>
+						</div>
+					</div>
+					<!-- END TABLE STRIPED -->
+				</div>
+			</div>
+		</div>
+<!-- Javascript -->
+<#include "/pages/common/common.html"/>
+<script type="text/javascript">
+var imageHtml = "<div class='pull-left loan-file-container'><img src='{0}' /><i class='zmdi zmdi-close close' title='点击删除文件'></i></div>";
+
+function validation(){
+	var mobile = $("#mobile").val();
+	if (mobile == "") {
+		app.alertErr('手机号不能为空！');
+		return false;
+	}
+	var idNo = $("#idNo").val();
+	if (idNo == "") {
+		app.alertErr('身份证不能为空！');
+		return false;
+	}
+	return true;
+}
+
+var headIcon = "";
+<#if  Session["loginUser"]??>
+	headIcon = '${Session["loginUser"].headIcon}';
+</#if>
+
+$(function(){
+	
+})
+
+</script>
+</body>
+
+</html>

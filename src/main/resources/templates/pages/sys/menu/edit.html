@@ -1,0 +1,149 @@
+<div id="editModal" class="modal fade ">
+    <div class="modal-dialog modal-lg" style="width: 600px;">
+	    <div class="modal-content">
+	        <div class="modal-header">
+	        	<#if menu??>
+                	<h4 class="modal-title">编辑菜单</h4>
+	        	<#else>
+	        		<h4 class="modal-title">新增菜单</h4>
+	        	</#if>
+            </div>
+            <div class="modal-body">
+				<form id="addForm" class="form-horizontal" role="form">
+		    		<input type="hidden" id="menuId" value="${(menu.id)!}" />
+					<div class="form-body">
+						<div class="form-group">
+							<label class="col-sm-3 control-label" style="position: relative;">
+								<span style="position: absolute; color: #f6675d; left: 80px">*</span>
+								菜单名
+							</label>
+							<div class="col-sm-3">
+								<div class="fg-line">
+									<input type="text" id="name" class="form-control" style="width: 100px; height: 31px" value="${(menu.name)!}">
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label" style="position: relative;">
+								url
+							</label>
+							<div class="col-sm-6">
+								<div class="fg-line">
+									<input type="text" id="url" class="form-control" style="width: 200px; height: 31px" value="${(menu.url)!}">
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label" style="position: relative;">
+								url_icon
+							</label>
+							<div class="col-sm-6">
+								<div class="fg-line">
+									<input type="text" id="urlIcon" class="form-control" style="width: 200px; height: 31px" value="${(menu.urlIcon)!}">
+								</div>
+							</div>
+						</div>
+						<#if menu?exists>
+								<div class="form-group">
+									<label class="col-sm-3 control-label" style="position: relative;">
+										所属菜单
+									</label>
+									<div class="col-sm-3">
+										<div class="fg-line">
+											<select id="parentId" class="selectpicker" style="width:120px; height: 31px">
+			                                      <option value="" >请选择</option>
+			                                      <#if parentMenus?exists>
+				                                      <#list parentMenus as m>
+				                                      		<option value="${m.id}"
+				                                      			<#if menu??> 	
+				                                      				<#if menu.parentId??> 	
+				                                      					<#if menu.parentId==m.id> 
+				                                      						selected="selected"
+				                                      					</#if>
+			                                      					</#if>
+				                                      			</#if>>${m.name}</option>
+				                                      </#list>
+			                                      </#if>
+			                                  </select>
+										</div>
+									</div>
+								</div>
+						<#else>
+							<div class="form-group">
+									<label class="col-sm-3 control-label" style="position: relative;">
+										所属菜单
+									</label>
+									<div class="col-sm-3">
+										<div class="fg-line">
+											<select id="parentId" class="selectpicker" style="width:120px; height: 31px">
+			                                      <option value="" >请选择</option>
+			                                      <#if parentMenus?exists>
+				                                      <#list parentMenus as m>
+				                                      		<option value="${m.id}">${m.name}</option>
+				                                      </#list>
+			                                      </#if>
+			                                  </select>
+										</div>
+									</div>
+								</div>
+						</#if>
+					</div>
+				</form>
+		    </div>
+		    <div class="modal-footer">
+		        <button type="button" class="btn btn-info" id="save">保存</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+		</div>
+    </div>
+    <script type="text/javascript">
+    	console.log('${(menu.parentId)!}');
+    	function validation(){
+			var name = $("#name").val();
+			if (name == null || name == "") {
+				app.alertErr('菜单名不能为空！');
+				return false;
+			}
+    		return true;
+    	}
+    	
+    	
+		$(function(){
+			$('.selectpicker').selectpicker();
+			
+			/*提交*/
+			$("#save").click(function(){
+            	if(validation()){
+            		var curId = $("#menuId").val();
+            		var data = {
+           				id : curId,
+           				name : $("#name").val() ,
+           				url : $("#url").val(),
+           				urlIcon : $.trim($("#urlIcon").val()),
+           				parentId : $("#parentId").val()
+            		}
+            		app.ajax({
+                		url : '/sysMenu/saveOrUpdate',
+                		type : 'POST',
+        				data : data,
+        				success : function(resp){
+        					if(resp){
+                                app.alertOk("操作成功");
+                                
+                               	 $('#list #data-name-'+curId).text($("#addForm #name").val());
+                                 $('#list #data-url-'+curId).text($("#addForm #url").val());
+                                 $('#list #data-pname-'+curId).text($("#parentId option:selected").text());
+                                 $("#editModal").modal("hide");
+                            }
+        				},
+        				error : function(){
+        					flag = true;
+        				}
+                	});
+            	}
+            });
+		})
+		
+		
+    </script>
+</div>

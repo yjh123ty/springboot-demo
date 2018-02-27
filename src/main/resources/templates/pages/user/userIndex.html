@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>用户管理</title>
+	<#include "/pages/common/header.html">
+</head>
+<body>
+<style type="text/css"></style>
+		<div class="container-fluid">
+			<h3 class="page-title">用户管理</h3>
+			<div class="row">
+				<div class="col-md-12">
+					<!-- TABLE STRIPED -->
+					<div class="panel">
+								
+						<div style="margin-left:25px; padding-top: 25px; padding-bottom: 25px; height:60px">
+							<div class="pull-left" style="margin-right:35px">
+                                   <select id="state" class="selectpicker" style="width:120px">
+                                       <option value="">用户状态</option>
+                                       <option value="1">已停用</option>
+                                       <option value="2">未认证</option>
+                                       <option value="3">已认证</option>
+                                   </select>
+                               </div>
+                               
+                               <div class="pull-right" style="margin-right:35px">
+                                   <div class="pull-left" style="margin-right:10px;">
+                                       <select id="searchField" class="selectpicker">
+                                            <option value="username">账号</option>
+                                            <option value="name">昵称</option>
+                                      </select>
+                                   </div>
+                           
+                                   <div class="pull-left" style="width:200px;">
+                                       <div class="input-group">
+                                           <div class="fg-line">
+                                               <input id="searchPhase" type="text" class="form-control" placeholder="输入后直接回车确认">
+                                           </div>
+                                           <span id="searchPhaseBtn" class="input-group-addon last f-20" style="cursor:pointer;">
+                                               <i class="fa fa-search" style="font-size:20px;"></i>
+                                           </span>
+                                       </div>
+                                   </div>
+                               </div> 
+						</div>
+						
+						<div class="panel-body">
+							<div id="toolbar">
+				                	<button type="button" class="btn btn-info command-save"><i class="fa fa-plus"></i> 新增</button>
+					        </div>
+							<table id="list" class="table table-striped bootgrid-table">
+							</table>
+						</div>
+					</div>
+					<!-- END TABLE STRIPED -->
+				</div>
+			</div>
+		</div>
+<!-- Javascript -->
+<#include "/pages/common/common.html"/>
+<script type="text/javascript">
+	$(function(){
+		TableInit();
+		
+		$('#searchPhaseBtn').click(function(){
+            $('#list').bootstrapTable("refresh");
+        });
+
+        $('#searchPhase').inputEnter(function(inputValue) {
+            $('#list').bootstrapTable("refresh");
+        });
+        
+        $(".command-save").click(function(){
+        	app.showAjaxModal("/user/edit");
+        });
+	})
+	
+	function TableInit() {
+	
+		$("#list").bootstrapTable('destroy').bootstrapTable({
+			url : '/user/users',
+			method : 'GET',
+			dataType : "json",
+			toolbar : '#toolbar',		// 工具栏ID
+			// 是否显示行间隔色
+			striped : true,
+			// 是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+			cache : false,
+			// 分页
+			pagination : true,
+			// 单行选择
+			singleSelect : true,
+			// 服务端处理分页
+			sidePagination : "server",
+			// 是否启用排序
+			sortable : true,
+			// 可供选择的每页的行数（*）
+			pageList : [10,15],
+			pageNumber : 1, // 每页显示的记录数
+			pageSize : 10, // 当前页面的起始数据
+			showRefresh: true,                  //是否显示刷新按钮
+	
+			// 设置为undefined可以获取pageSize，pageNumber, searchText，sortName，sortOrder
+			// 设置为limit可以获取limit, offset, search, sort, order
+			queryParamsType : "undefined",
+			queryParams : function (params) {
+				var param = {
+	// 					limit : params.limit,
+	// 					offset : params.offset,
+	// 					sort : params.sort,
+	// 					order : params.order
+						pageNumber : params.pageNumber,
+						pageSize : params.pageSize,
+						orderBy : params.sortName,
+						orderSort : params.sortOrder,
+				};
+				var searchField = $("#searchField").val();
+	        	var searchPhase = $("#searchPhase").val();
+				if (searchField != '' && searchPhase != '') {
+					param[searchField] = $.trim(searchPhase);
+				}
+				var state = $("#state").val();
+				if(state){
+					param["state"] = state;
+				}
+				return param;
+			},
+			// 是否启用点击选中行
+			clickToSelect : true,
+			columns : [
+				{
+					title : '昵称',
+					field : 'name',
+					align : 'center',
+					sortable : false,
+					formatter : function(value, row, index) {
+						var result = "";
+						if(row.name){
+								result += '<span id="data-name-'+ row.uid +'">'+ row.name +'</span>';
+						}
+						return result;
+					}
+				},
+				{
+					title : '账号',
+					field : 'username',
+					align : 'center',
+					sortable : false,
+					formatter : function(value, row, index) {
+						var result = "";
+						if(row.username){
+								result += '<span id="data-username-'+ row.uid +'">'+ row.username +'</span>';
+						}
+						return result;
+					}
+				},
+				{
+					title : '身份证号',
+					field : 'idNo',
+					align : 'center',
+					sortable : false,
+					formatter : function(value, row, index) {
+						var result = "";
+						if(row.idNo){
+								result += '<span id="data-idNo-'+ row.uid +'">'+ row.idNo +'</span>';
+						}
+						return result;
+					}
+				},
+				{
+					title : '状态',
+					field : 'state',
+					align : 'center',
+					sortable : true,
+					formatter : function(value, row, index) {
+						var result = "";
+						if(row.state){
+							switch (row.state) {
+							case 1:
+								result += '<span class="label label-danger" id="data-status-'+ row.uid +'">已停用</span>';
+								break;
+							case 2:
+								result += '<span class="label label-warning" id="data-status-'+ row.uid +'">未认证</span>';
+								break;
+							case 3:
+								result += '<span class="label label-success" id="data-status-'+ row.uid +'">已认证</span>';
+								break;
+							}
+						}else{
+							result += "-";
+						}
+						return result;
+					}
+				},
+				{
+					title : '操作',
+					field : 'id',
+					align : 'center',
+					formatter : function(value, row, index) {
+						var edit = "";
+						var del = "";
+							edit = "<button type='button' class='btn btn-info command-edit' data-uid='"+row.uid+"'> <i class='fa fa-edit'></i> 编辑</button>";
+							del = "<button type='button' class='btn btn-danger command-delete' data-uid='"+row.uid+"'> <i class='fa fa-trash-o'></i> 删除</button>";
+							email = "<button type='button' class='btn btn-info command-email' data-uid='"+row.uid+"'> <i class='fa fa-envelope'></i> 发送邮件</button>";
+						var html = edit + "&emsp;" + del + "&emsp;" + email;
+						return html;
+					}
+				} 
+				],
+				onLoadSuccess : function() { // 加载成功时执行
+					$(".command-edit").click(function(){
+						var uid = $(this).data("uid");
+						app.showAjaxModal("/user/edit?uid="+uid);
+					});
+				
+					$(".command-email").click(function(){
+						var uid = $(this).data("uid");
+						app.ajax({
+	                		url : '/mail/sendmail',
+	                		type : 'POST',
+	        				data : {uid : uid},
+	        				success : function(resp){
+	        					if(resp){
+	                                app.alertOk("操作成功");
+	                            }
+	        				},
+	        				error : function(){
+	        					flag = true;
+	        				}
+	                	});
+					});
+				
+					$(".command-delete").click(function(){
+						var uid = $(this).data("uid");
+						if(uid){
+							app.ajax({
+		                		url : '/user/delete',
+		                		type : 'POST',
+		        				data : {uid : uid},
+		        				success : function(resp){
+		        					if(resp){
+		                                app.alertOk("操作成功");
+		                                $("#editModal").modal("hide");
+		                                //刷新table
+		                                $("#list").bootstrapTable("refresh");
+		                            }
+		        				},
+		        				error : function(){
+		        					flag = true;
+		        				}
+		                	});
+						}else{
+							app.alertErr("没有找到该用户！");
+						}
+						
+					});
+				}
+		});
+	};
+
+</script>
+</body>
+
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>test</title>
+	<#include "/pages/common/header.html">
+</head>
+<body>
+<style type="text/css">
+	
+</style>
+		<div class="container-fluid">
+			<div class="row">
+					<table id="list" class="table table-condensed table-hover table-striped" >
+						<thead> 
+		        			<tr>
+		        				<th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" data-sortable="false"></th>
+		        				<th data-column-id="name"  data-sortable="false">权限名称</th>
+								<th data-column-id="url" data-sortable="false">url</th>
+							</tr>
+						</thead>
+	          		</table>
+			</div>
+			
+			</div>
+			<button id="PButton">xxx</button>
+		</div>
+<!-- Javascript -->
+<#include "/pages/common/common.html"/>
+
+
+<script type="text/javascript">
+
+
+var init = function(){
+	var grid = $("#list").bootgrid({
+		ajax : true,
+        url:"/sysPerm/test/Plist",
+        method : "POST",
+        selection: true,
+ 		multiSelect: true,
+		labels: {
+			loading: '数据加载中...',
+			infos: '',
+			noResults: "没有可展示的数据"
+		}
+	 });
+}
+
+var init2 = function(){
+	var grid = app.bootgrid("#list",{
+		url:"/sysPerm/test/Plist",
+        selection: true,
+ 		multiSelect: true,
+		labels: {
+			loading: '数据加载中...',
+			infos: '',
+			noResults: "没有可展示的数据"
+		},
+		filters : function(){
+			var filter = {};
+			var searchField = $("#searchField1").val();
+        	var searchPhase = $("#searchPhase1").val();
+			if (searchField != '' && searchPhase != '') {
+				filter[searchField] = $.trim(searchPhase);
+			}
+			return filter;
+		}
+	});
+}
+
+	$(function(){
+// 		init();
+		init2();
+		 
+		 $('#PButton').click(function(){
+				var deleteList = $('#list').bootgrid('getSelectedRows');
+				if(deleteList.length == 0) {
+					app.alertErr("请选择要删除的角色")
+				}
+				console.log(deleteList);
+		 });
+		 
+	})
+	
+</script>
+</body>
+
+</html>

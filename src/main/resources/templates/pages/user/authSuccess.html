@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>用户认证</title>
+	<#include "/pages/common/header.html">
+</head>
+<body>
+<style type="text/css">
+	#addForm{
+		margin-top:15px;
+	}
+</style>
+		<div class="container-fluid">
+			<h3 class="page-title">用户认证</h3>
+			<div class="row">
+				<div class="col-md-12">
+					<!-- TABLE STRIPED -->
+					<div class="panel">
+						<div class="panel-body">
+							恭喜您！认证成功！ &emsp; 
+							将在 <span id="timeCounter" style="color: red; font-weight: bolder;">秒后自动跳转首页 </span><a onclick="goMain()">返回首页</a>
+						</div>
+					</div>
+					<!-- END TABLE STRIPED -->
+				</div>
+			</div>
+		</div>
+<!-- Javascript -->
+<#include "/pages/common/common.html"/>
+<script type="text/javascript">
+	function goMain(){
+		parent.location.reload();
+	}
+	
+	$(function(){
+		var s = 3;
+		
+		function printTime(){
+			if(s >= 0){
+				$("#timeCounter").text(s);
+				console.log("s : " + s);
+				s--;
+			}else{
+				goMain();
+			}
+		}
+		
+		if(s >= 0){
+			setInterval(function(){
+				printTime();
+	        },1000);
+		}
+		
+	})
+</script>
+</body>
+</html>

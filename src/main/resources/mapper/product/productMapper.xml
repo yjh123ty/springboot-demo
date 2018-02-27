@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD com.example.mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yoga.demo.mapper.product.ProductMapper">
+  <resultMap id="BaseResultMap" type="com.yoga.demo.domain.product.Product">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="quantity" jdbcType="INTEGER" property="quantity" />
+    <result column="price" jdbcType="DECIMAL" property="price" />
+    <result column="bargain_flag" jdbcType="BIT" property="bargainFlag" />
+    <result column="image" jdbcType="VARCHAR" property="image" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="is_delete" jdbcType="BIT" property="delete" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, name, description, quantity, price, bargain_flag, image, create_time, is_delete
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from product
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <insert id="insert" parameterType="com.yoga.demo.domain.product.Product" keyProperty="id" useGeneratedKeys="true">
+    insert into product (id, name, description, 
+      quantity, price, bargain_flag, 
+      image, create_time, is_delete
+      )
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, 
+      #{quantity,jdbcType=INTEGER}, #{price,jdbcType=DECIMAL}, #{bargainFlag,jdbcType=BIT}, 
+      #{image,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{delete,jdbcType=BIT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.yoga.demo.domain.product.Product">
+    insert into product
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="description != null">
+        description,
+      </if>
+      <if test="quantity != null">
+        quantity,
+      </if>
+      <if test="price != null">
+        price,
+      </if>
+      <if test="bargainFlag != null">
+        bargain_flag,
+      </if>
+      <if test="image != null">
+        image,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="delete != null">
+        is_delete,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="quantity != null">
+        #{quantity,jdbcType=INTEGER},
+      </if>
+      <if test="price != null">
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="bargainFlag != null">
+        #{bargainFlag,jdbcType=BIT},
+      </if>
+      <if test="image != null">
+        #{image,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delete != null">
+        #{delete,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yoga.demo.domain.product.Product">
+    update product
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="quantity != null">
+        quantity = #{quantity,jdbcType=INTEGER},
+      </if>
+      <if test="price != null">
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="bargainFlag != null">
+        bargain_flag = #{bargainFlag,jdbcType=BIT},
+      </if>
+      <if test="image != null">
+        image = #{image,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delete != null">
+        is_delete = #{delete,jdbcType=BIT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+	<sql id="selectFilter">
+		<where>
+			is_delete = 0
+			<if test="bargainFlag != null">
+				AND bargain_flag = #{bargainFlag}
+			</if>
+			<if test="name != null">
+				AND name like CONCAT("%", #{name}, "%") 
+			</if>
+		</where>
+	</sql>
+
+    <select id="list" parameterType="com.yoga.demo.domain.product.dto.SearchProductDTO" resultMap="BaseResultMap">
+    	select * from product
+    	<include refid="selectFilter" />
+    	limit #{start},#{pageSize}
+    </select>
+    
+	<select id="countList" parameterType="com.yoga.demo.domain.product.dto.SearchProductDTO" resultType="int">
+		select count(*) from product
+		<include refid="selectFilter" />
+	</select>
+    
+    <update id="deleteByPrimaryKey" parameterType="int">
+    	update product set is_delete = 1 where id = #{id} 
+    </update>
+    
+    <insert id="saveImages">
+    	insert into product_img(product_id, url)
+    	values
+    	<foreach collection="images" item="item" index="index" separator=",">
+			(#{item.productId},#{item.url})
+		</foreach>
+    </insert>
+    
+</mapper>

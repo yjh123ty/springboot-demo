@@ -1,0 +1,169 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD com.example.mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yoga.demo.mapper.role.SysRoleMapper">
+
+	  <resultMap id="BaseResultMap" type="com.yoga.demo.domain.shiro.SysRole" >
+	    <id column="id" property="id" jdbcType="INTEGER" />
+	    <result column="role" property="role" />
+	    <result column="description" property="description" />
+	    <result column="available" property="available"/>
+	    
+	    <collection property="permissions" ofType="com.yoga.demo.domain.shiro.SysPermission">
+	    	<id column="pid" property="id"/>
+	    	<id column="pname" property="name"/>
+	    </collection>
+	  </resultMap>
+	  
+	  <resultMap id="RoleMenuMap" type="com.yoga.demo.domain.shiro.SysRole" >
+	    <id column="id" property="id" jdbcType="INTEGER" />
+	    <result column="role" property="role" />
+	    
+	    <collection property="menus" ofType="com.yoga.demo.domain.menu.SysMenu">
+	    	<id column="mid" property="id"/>
+	    	<id column="mname" property="name"/>
+	    </collection>
+	  </resultMap>
+
+	<insert id="insert" parameterType="com.yoga.demo.domain.shiro.SysRole" keyProperty="id" useGeneratedKeys="true">
+		insert into sys_role (role , description ,available)
+		values(#{role} ,#{description} ,#{available})
+	</insert>
+	
+	<insert id="saveRolePermission">
+		insert into sys_role_permission (permission_id , role_id)
+		values(#{permissionId} ,#{roleId})
+	</insert>
+	
+	<insert id="saveRoleMenu">
+		insert into sys_role_menu (menu_id , role_id)
+		values(#{menuId} ,#{roleId})
+	</insert>
+	
+	<update id="updateByPrimaryKeySelective" parameterType="com.yoga.demo.domain.shiro.SysRole">
+		update sys_role
+		<set>
+			<if test="role != null and role !=''">
+				role = #{role},
+			</if>
+			<if test="description != null and description !=''">
+				description = #{description},
+			</if>
+			<if test="available != null and available !=''">
+				available = #{available},
+			</if>
+		</set>	
+		where id = #{id}
+	</update>
+	
+	<delete id="deleteByPrimaryKey" parameterType="int">
+		delete from sys_role
+		where id = #{id}
+	</delete>
+	
+	<delete id="deleteRolePermission">
+		delete from sys_role_permission 
+		<where>
+			<if test="permissionId != null">
+				permission_id = #{permissionId}
+			</if>
+			<if test="roleId != null">
+				AND role_id = #{roleId}
+			</if>
+		</where>	
+	</delete>
+	
+	<delete id="deleteRoleMenu">
+		delete from sys_role_menu 
+		<where>
+			<if test="menuId != null">
+				menu_id = #{menuId}
+			</if>
+			<if test="roleId != null">
+				AND role_id = #{roleId}
+			</if>
+		</where>	
+	</delete>
+	
+	<select id="selectByPrimaryKey" parameterType="int" resultMap="BaseResultMap">
+		SELECT 
+			a.*,
+			c.id pid,
+			c.name pname
+		from sys_role a
+		left join sys_role_permission b ON a.id = b.role_id 
+		left join sys_permission c ON c.id = b.permission_id AND c.available = 1
+		where a.id = #{id} AND a.available = 1 
+	</select>
+	
+	<select id="getRoleMenusByPrimaryKey" parameterType="int" resultMap="RoleMenuMap">
+		SELECT 
+			a.*,
+			c.id mid,
+			c.name mname
+		from sys_role a
+		left join sys_role_menu b ON a.id = b.role_id 
+		left join sys_menu c ON c.id = b.menu_id 
+		where a.id = #{id} AND a.available = 1 
+	</select>
+	
+    <select id="listUserRoles" resultType="java.lang.String" parameterType="java.lang.Integer">
+        SELECT
+        	r.role
+        FROM user_info u	
+        LEFT JOIN sys_user_role ur ON ur.uid = u.uid
+        LEFT JOIN sys_role r ON r.id = ur.role_id
+        where 
+        	u.uid = #{userId}
+    </select>
+    
+    <select id="list" resultType="com.yoga.demo.domain.shiro.SysRole" parameterType="com.yoga.demo.domain.shiro.dto.SysRoleSearchDTO">
+        SELECT
+        	r.*
+        FROM sys_role r 
+        <where>
+        	<if test="description != null">
+        		r.description like CONCAT("%", #{description}, "%") 
+       		</if>
+        	<if test="available != null">
+	        	AND r.available = #{available}
+        	</if>
+      	</where> 
+      	<choose>
+	        <when test="orderBy != null">
+	            ORDER BY ${orderBy} ${orderSort}
+	        </when>
+	        <otherwise>
+	            ORDER BY r.id ASC
+	        </otherwise>
+	    </choose>
+      	<choose>
+	            <when test="start &lt; 0 or pageSize &lt; 0"></when>
+	            <otherwise>LIMIT #{start}, #{pageSize}</otherwise>
+	     </choose>
+    </select>
+    
+    <select id="countList" resultType="int" parameterType="com.yoga.demo.domain.shiro.dto.SysRoleSearchDTO">
+        SELECT
+        	COUNT(r.id)
+        FROM sys_role r 
+        <where>
+        	<if test="description != null">
+        		r.description like CONCAT("%", #{description}, "%")
+       		</if> 
+        	<if test="available != null">
+	        	AND r.available = #{available}
+        	</if>
+      	</where> 
+    </select>
+    
+    <select id="listAll" resultType="com.yoga.demo.domain.shiro.SysRole">
+        SELECT
+        	r.*
+        FROM sys_role r 
+        WHERE r.available = 1
+    </select>
+
+</mapper>

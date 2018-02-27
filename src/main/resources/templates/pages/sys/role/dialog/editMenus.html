@@ -1,0 +1,224 @@
+<div id="editMenusModal" class="modal fade">
+    <div class="modal-dialog modal-lg" style="width: 800px;">
+	    <div class="modal-content">
+	        <div class="modal-header">
+                	<h4 class="modal-title">选择菜单</h4>
+            </div>
+            <div class="modal-body">
+            	<div class="panel">
+            		<div class="input-group">
+            			<button type="button" class="btn btn-info" id="btn-check-all" data-dismiss="modal">全选</button>
+            		</div>
+            		<div class="panel-body">
+            			<div id="tree">
+            				
+            			</div>
+            		</div>
+            	</div>
+		    </div>
+		    <div class="modal-footer">
+		        <button type="button" class="btn btn-info" id="saveMenus" data-dismiss="modal">保存</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+		</div>
+    </div>
+    <#include "/pages/common/common.html"/>
+    
+<script src="../../../../../static/js/bootstrap-treeview.js"></script>
+
+<script type="text/javascript">
+	var curIds = "";
+	var roleId = "${id}";
+	//回显id列表
+	var existsIds = [];
+	
+	<#if curIds??>
+		curIds = '${curIds}';
+		var idArray = curIds.split(',');
+		for (var n = 0; n < idArray.length - 1; n++) {
+			existsIds.push(parseInt(idArray[n]));
+		}
+	</#if>
+	
+	// 选中父节点时，选中所有子节点
+    function getChildNodeIdArr(node) {  
+    	var ts = [];  
+        if (node.nodes) {    
+            for (x in node.nodes) {
+            	if(typeof(node.nodes[x].nodeId) == "undefined")
+            		continue;
+                ts.push(node.nodes[x].nodeId);     
+                if (node.nodes[x].nodes) {      
+                    var getNodeDieDai = getChildNodeIdArr(node.nodes[x]);      
+                    for (j in getNodeDieDai) {       
+                            ts.push(getNodeDieDai[j]);     
+                    }     
+                }    
+            }   
+        } else {    
+            ts.push(node.nodeId);   
+        }   
+        return ts;  
+    }   
+	
+ 	// 选中任一子节点时，选中父节点       取消所有子节点时取消父节点
+    function setParentNodeCheck(node) { 
+ 		//选中子节点，父节点也被选中
+    	if(typeof(node.parentId) != "undefined"){
+    		var parentNode = $('#tree').treeview('getNode', [ node.parentId, { silent: true } ]);
+    		$('#tree').treeview('checkNode', [parentNode, { silent: true }]); 
+	 		//删除所有子节点时，父节点被删除
+	 		if (parentNode.nodes) {    
+	            var unCheckedCount = 0;    
+	            for (x in parentNode.nodes) {
+	            	if(typeof(parentNode.nodes[x].state) != "undefined"){
+	            		if (!parentNode.nodes[x].state.checked) {      
+		                    unCheckedCount ++;     
+		                } else {      
+		                    break;     
+		                }    
+	            	}
+	            }    
+	            //如果子节点全部未被选 父取消选中
+	            if (unCheckedCount == parentNode.nodes.length) {  
+	                $('#tree').treeview('uncheckNode', parentNode.nodeId); 
+	            } 
+	        }
+ 		}
+    }   
+	
+ 	// 取消父节点时 取消所有子节点
+   function setChildNodeUncheck(node) { 
+	   var ts = []; 
+ 	   if(typeof(node.parentId) != "undefined"){
+ 		  if (node.nodes) {   
+ 	           ts = [];    //当前节点子集中未被选中的集合 
+ 	           for (x in node.nodes) { 
+ 	               if (!node.nodes[x].state.checked) {  
+ 	                   ts.push(node.nodes[x].nodeId);  
+ 	               } 
+ 	               if (node.nodes[x].nodes) {      
+ 	                   var getNodeDieDai = node.nodes[x];
+ 	                   for (j in getNodeDieDai) {
+ 	                       if (!getNodeDieDai.nodes[x].state.checked) {        
+ 	                           ts.push(getNodeDieDai[j]); 
+ 	                       }    
+ 	                   }     
+ 	               }    
+ 	           }   
+ 	       }
+ 	   }
+       return ts;  
+   }
+ 	
+	//保存所有当前选中的菜单id
+	var menuIds = [];
+	
+	//1、从后台获取所有的菜单
+	//2、从后台获取当前角色拥有的菜单id
+	//3、绘制菜单树，当前拥有的菜单需要回显，打钩
+	function dataForTree(data){
+		var tree = [];
+		for (var i = 0; i < data.length; i++) {
+			var menu = data[i];
+			if($.inArray(menu.nodeId, existsIds) == -1){
+				menu['state'] = {
+						checked : false,
+					    disabled: false,
+					    expanded: true,
+					    selected: false
+					};
+			}else{
+				menu['state'] = {
+							checked : true,
+							disabled: false,
+						    expanded: true,
+						    selected: false
+						};
+			}
+			if(menu.nodes != null && menu.nodes != ''){
+				menu.nodes = dataForTree(menu.nodes);
+			}
+			tree.push(menu);
+		}
+		return tree;
+	}
+	
+    
+	$(function(){
+ 		//从后台获取菜单
+		$.ajax({
+	   		url : '/sysMenu/getMenuTree',
+	   		type : 'GET',
+			success : function(resp){
+				$('#tree').treeview({
+	            	data: dataForTree(resp),     // 数据源
+	            	data: resp,  
+		            showCheckbox: true,   //是否显示复选框
+		            multiSelect: false
+		            ,
+		            onNodeChecked: function(event, node){
+		    	       	if(typeof(node.parentId) == "undefined"){
+		    	       		var selectNodes = getChildNodeIdArr(node); //获取所有子节点  
+		    	       		if (selectNodes) { //子节点不为空，则选中当前子节点       
+			    	       	    $('#tree').treeview('checkNode', [selectNodes, { silent: true }]); 
+			    	       	}  
+		    	       	}else
+		    	       		setParentNodeCheck(node);
+		    	   },
+		    	   onNodeUnchecked: function(event, node){
+		    		   //该节点是父节点
+			    		if(node.parentId == null || typeof(node.parentId) == "undefined"){
+				   			// 取消父节点 子节点取消
+				   	       	var selectNodes = setChildNodeUncheck(node); //获取未被选中的子节点 
+				   	       	var childNodes = getChildNodeIdArr(node);    //获取所有子节点 
+				   	       	if (selectNodes && selectNodes.length==0) { //有子节点且未被选中的子节点数目为0，则取消选中所有子节点   
+				   	       	  $('#tree').treeview('uncheckNode', [childNodes, { silent: true }]);      
+				   	       	}  
+			    		}
+		    		   //该节点是子节点
+			    		else{
+			    			setParentNodeCheck(node);
+			    		}
+		        	}
+				});
+			},
+			error : function(){
+				flag = true;
+			}
+	   	});
+ 		
+	    
+	   // Check/uncheck all
+        $('#btn-check-all').on('click', function (e) {
+        	var nodes = $('#tree').treeview('checkAll');
+        	console.log(nodes);
+        });
+	   
+	    //保存
+	    $('#saveMenus').click(function(){
+	    	//返回所有被选中的节点id
+	    	var nodes = $('#tree').treeview('getChecked');
+	    	for (var i = 0; i < nodes.length; i++) {
+	    		menuIds.push(nodes[i].nodeId);
+			}
+	    	//发送ajax，保存角色对应的菜单
+	    	app.ajax({
+           		url : '/sysRole/saveOrUpdateRoleMenus',
+           		type : 'POST',
+   				data : {roleId : roleId, menuIds : menuIds},
+   				success : function(resp){
+   					if(resp){
+                           app.alertOk("操作成功");
+                           $("#editMenusModal").modal("hide");
+                       }
+   				},
+   				error : function(){
+   					flag = true;
+   				}
+           	});
+	    });
+	})
+	   
+    </script>
+</div>

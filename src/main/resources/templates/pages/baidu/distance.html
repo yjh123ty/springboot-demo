@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf8" />
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	<title>批量地址</title>
+	<#include "/pages/common/header.html">
+	<style type="text/css">
+		body, html{width: 100%;height: 100%;margin:0;font-family:"微软雅黑";}
+		#l-map{height:500px;width:100%;}
+		#r-result{width:100%; font-size:14px;line-height:40px;}
+	</style>
+</head>
+<body>
+	<div id="l-map"></div>
+	<input id="addr1" placeholder="地址1"/> - <input id="addr2" placeholder="地址2"/>
+	<button id="disBtn">获取两个地址的坐标</button>
+	<div id="r-result">
+		<div id="result"></div>
+	</div>
+</body>
+<!-- Javascript -->
+<#include "/pages/common/common.html"/>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=B9UFVPQK5qn32165zp704FL2S4V5aHQ1"></script>
+</html>
+<script type="text/javascript">
+
+//百度地图API功能
+var map = new BMap.Map("l-map");
+map.centerAndZoom("绵阳", 13);
+map.enableScrollWheelZoom(true);
+
+	$(function(){
+		$("#addr1").val('绵阳虹高市场');
+		$("#addr2").val('绵阳火车客站');
+		
+		$("#disBtn").click(function(){
+			map.clearOverlays();
+			var addr1 = $.trim($("#addr1").val());
+			var addr2 = $.trim($("#addr2").val());
+// 			// 创建地址解析器实例
+			var myGeo = new BMap.Geocoder();
+			if(addr1 != '' && addr2 != ''){
+				// 将地址解析结果显示在地图上,并调整地图视野
+				myGeo.getPoint(addr1, function(point){
+					if (point) {
+						document.getElementById("result").innerHTML += addr1 + ":" + "<span id='point1'>" + point.lng + "," + point.lat + "</span></br>";
+						pointX = new BMap.Point(point.lng, point.lat);
+						map.addOverlay(new BMap.Marker(point));
+					}else{
+						alert("您选择地址没有解析到结果!");
+					}
+				});
+				
+				myGeo.getPoint(addr2, function(point){
+					if (point) {
+						document.getElementById("result").innerHTML += addr2 + ":" + "<span id='point2'>" + point.lng + "," + point.lat + "</span></br>";
+						map.addOverlay(new BMap.Marker(point));
+					}else{
+						alert("您选择地址没有解析到结果!");
+					}
+				});
+			}else{
+				app.alertErr("请输入地址");
+			}
+		});
+		
+		
+		$("#getPointBtn").click(function(){
+			var point1 = $("#result").find("span[id='point1']").text();
+			var point2 = $("#result").find("span[id='point2']").text();
+		});
+		
+	})
+	
+	
+	
+	
+	
+</script>

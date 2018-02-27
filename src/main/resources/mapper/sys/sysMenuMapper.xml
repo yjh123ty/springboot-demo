@@ -1,0 +1,149 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD com.example.mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yoga.demo.mapper.menu.SysMenuMapper">
+
+	<resultMap id="BaseResultMap" type="com.yoga.demo.domain.menu.SysMenu">
+	    <id column="id" jdbcType="BIGINT" property="id" />
+	    <result column="name" jdbcType="VARCHAR" property="name" />
+	    <result column="url" jdbcType="VARCHAR" property="url" />
+	    <result column="url_icon" jdbcType="VARCHAR" property="urlIcon" />
+	    <result column="parent_id" jdbcType="INTEGER" property="parentId" />
+	    <result column="parentName" jdbcType="INTEGER" property="parentName" />
+	    <result column="order" jdbcType="INTEGER" property="order" />
+	    
+	    <collection property="children" ofType="com.yoga.demo.domain.menu.SysMenu">
+	    	<id column="cid" property="id"/>
+	    	<result column="cname" property="name"/>
+	    </collection>
+	  </resultMap>
+	  
+	  <resultMap id="MenuTreeMap" type="com.yoga.demo.domain.menu.vo.SysMenuTreeVO">
+	    <id column="id" jdbcType="BIGINT" property="nodeId" />
+	    <result column="name" jdbcType="VARCHAR" property="text" />
+	    <result column="parentId1" jdbcType="VARCHAR" property="parentId" />
+	    
+	    <collection property="nodes" ofType="com.yoga.demo.domain.menu.vo.SysMenuTreeVO">
+	    	<id column="mid" property="nodeId"/>
+	    	<result column="mname" property="text"/>
+	    	<result column="parentId" property="parentId"/>
+	    </collection>
+	  </resultMap>
+	  
+    <insert id="insert" parameterType="com.yoga.demo.domain.menu.SysMenu" keyProperty="id" useGeneratedKeys="true">  
+		insert into sys_menu (name, url, url_icon, parent_id, `order`)
+		values(#{name} ,#{url} ,#{urlIcon} ,#{parentId} ,#{order})
+	</insert>
+	
+	<update id="updateByPrimaryKeySelective" parameterType="com.yoga.demo.domain.menu.SysMenu">
+    update sys_menu
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null" >
+        parent_id = #{parentId,jdbcType=INTEGER},
+      </if>
+      <if test="url != null" >
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="urlIcon != null" >
+        url_icon = #{urlIcon,jdbcType=VARCHAR},
+      </if>
+      <if test="order != null" >
+        `order` = #{order,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+	  
+  	<insert id="saveRoleMenu">
+		insert into sys_role_menu (role_id , menu_id)
+		values(#{roleId} ,#{menuId})
+	</insert>
+	
+	<delete id="deleteByPrimaryKey" parameterType="int">
+		delete from sys_menu where id = #{menuId}
+	</delete>
+	
+	<delete id="deleteRoleMenu" >
+		delete from sys_role_menu 
+		<where>
+			<if test="menuId != null">
+				menu_id = #{menuId}
+			</if>
+			<if test="roleId != null">
+				AND role_id = #{roleId}
+			</if>
+		</where>	
+	</delete>
+
+    <select id="getUserMenusByLoginUser" resultMap="BaseResultMap" parameterType="string">
+        select m.* from sys_menu m
+		LEFT JOIN sys_role_menu rm ON m.id = rm.menu_id
+		LEFT JOIN sys_role r ON r.id = rm.role_id
+		LEFT JOIN sys_user_role ur ON ur.role_id = r.id
+		LEFT JOIN user_info u ON ur.uid = u.uid
+		where u.`username` = #{loginName} AND r.available = 1 
+		ORDER BY m.id
+    </select>
+    
+    <select id="list" resultMap="BaseResultMap" parameterType="com.yoga.demo.domain.menu.dto.SysMenuSearchDTO">
+        select m.*,
+        p.name parentName
+        from sys_menu m
+        left join sys_menu p ON p.id = m.parent_id
+		<where>
+			<if test="name != null">
+				m.name LIKE CONCAT("%", #{name}, "%") 
+			</if>
+			<if test="url != null">
+				m.url LIKE CONCAT("%", #{url}, "%") 
+			</if>
+		</where> 
+    </select>
+    
+    <select id="countList" resultType="int" parameterType="com.yoga.demo.domain.menu.dto.SysMenuSearchDTO">
+    	select count(m.id) 
+    	from sys_menu m
+		<where>
+			<if test="name != null">
+				m.name LIKE CONCAT("%", #{name}, "%") 
+			</if>
+			<if test="url != null">
+				m.url LIKE CONCAT("%", #{url}, "%") 
+			</if>
+		</where> 
+    </select>
+    
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="int">
+    	select m.*,
+        child.id cid,
+        child.name cname
+        from sys_menu m
+		LEFT JOIN sys_menu child ON m.id = child.parent_id
+		where m.id = #{menuId}
+    </select>
+    
+    <select id="getParentMenus" resultType="com.yoga.demo.domain.menu.SysMenu">
+    	select m.*
+        from sys_menu m
+		where m.parent_id IS NULL
+    </select>
+    
+    <select id="getMenuTree" resultMap="MenuTreeMap">
+    	SELECT 
+			p.id,
+			p.name,
+			p.parent_id parentId1,
+			m.id mid,
+			m.name mname,
+			m.parent_id parentId
+		from sys_menu p
+		LEFT JOIN sys_menu m ON p.id = m.parent_id
+		where p.parent_id IS NULL
+    </select>
+    
+</mapper>

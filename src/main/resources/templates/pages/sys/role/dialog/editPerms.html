@@ -1,0 +1,134 @@
+<div id="editPermsModal" class="modal fade">
+    <div class="modal-dialog modal-lg" style="width: 800px;">
+	    <div class="modal-content">
+	        <div class="modal-header">
+                	<h4 class="modal-title">选择权限</h4>
+            </div>
+            <div class="modal-body">
+            		<div class="input-group">
+	            		<div class="pull-left" style="margin-right:10px">
+	                         <select id="searchField1" class="selectpicker">
+	                              <option value="id">权限id</option>
+	                              <option value="name">权限名称</option>
+	                        </select>
+	                     </div>
+	                     <div class="pull-left">
+	                         <div class="input-group">
+	                             <div class="fg-line">
+	                                 <input id="searchPhase1" type="text" class="form-control" placeholder="输入后直接回车确认">
+	                             </div>
+	                             <span id="searchPhaseBtn1" class="input-group-addon last f-20" style="cursor:pointer;">
+	                                 <i class="fa fa-search" style="font-size:20px;"></i>
+	                             </span>
+	                         </div>
+	                     </div> 
+                     </div>
+            	<div class="panel">
+            		<div class="panel-body">
+            			<table id="permsList" class="table table table-condensed table-hover">
+            				<thead>
+	            				<tr>
+									<th data-column-id="id" data-type="numeric" data-identifier="true" data-visible="false" data-sortable="false"></th>
+									<th data-column-id="id" data-sortable="false">权限id</th>
+									<th data-column-id="name" data-sortable="false">权限名称</th>
+									<th data-column-id="permission" data-sortable="false">标识</th>
+									<th data-column-id="url" data-sortable="false">url</th>
+								</tr>
+							</thead>
+            			</table>
+            		</div>
+            	</div>
+		    </div>
+		    <div class="modal-footer">
+		        <button type="button" class="btn btn-info" id="savePerms" data-dismiss="modal">保存</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+		</div>
+    </div>
+    <#include "/pages/common/common.html"/>
+    
+
+<script type="text/javascript">
+    
+    var curIds = "";
+    var roleId = "${id}";
+	
+	<#if curIds??>
+		curIds = '${curIds}';
+	</#if>
+    
+	var grid;
+    var initGrid = function(){
+    	 grid = app.bootgrid("#permsList",{
+    		url:"/sysPerm/list",
+    		ajaxSettings: {method: "GET"},
+            selection: true,
+     		multiSelect: true,
+     		rowSelect: true,
+     	    keepSelection: true,
+    		labels: {
+    			loading: '数据加载中...',
+    			infos: '',
+    			noResults: "没有可展示的数据"
+    		},
+    		filters : function(){
+    			var filter = {};
+    			var searchField = $("#searchField1").val();
+            	var searchPhase = $("#searchPhase1").val();
+    			if (searchField != '' && searchPhase != '') {
+    				filter[searchField] = $.trim(searchPhase);
+    			}
+    			return filter;
+    		}
+    	}).on("loaded.rs.jquery.bootgrid",function(e,rows){
+			if(curIds != ''){
+				var idArray = curIds.split(',');
+				idArray.pop();
+				var arr = new Array();
+				for (var int = 0; int < idArray.length; int++) {
+					var array_element = idArray[int];
+					var intValue = parseInt(array_element);
+					arr[int] = intValue;
+				}
+				grid.bootgrid("select", arr);
+			}
+		});
+    }
+    
+    
+	$(function(){
+		initGrid();
+		
+		$("#savePerms").click(function(){
+			//获取当前选中的权限ids
+			var selectedList = $("#permsList").bootgrid('getSelectedRows');
+			var preIds = selectedList.join(",");
+			// 发送ajax请求，保存角色与权限的关系
+   			app.ajax({
+           		url : '/sysRole/saveOrUpdateRolePerms',
+           		type : 'POST',
+   				data : {roleId : roleId, permIds : preIds},
+   				success : function(resp){
+   					if(resp){
+                           app.alertOk("操作成功");
+                           $("#editPermsModal").modal("hide");
+                       }
+   				},
+   				error : function(){
+   					flag = true;
+   				}
+           	});
+	 	});
+		
+		$('#searchPhaseBtn1').click(function(){
+            $('#permsList').bootstrapTable("refresh");
+        });
+
+        $('#searchPhase1').inputEnter(function(inputValue) {
+            $('#permsList').bootstrapTable("refresh");
+        });
+        
+	})
+	   
+    </script>
+</div>

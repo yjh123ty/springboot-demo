@@ -1,0 +1,212 @@
+<div id="editModal" class="modal fade ">
+    <div class="modal-dialog modal-lg" style="width: 600px;">
+	    <div class="modal-content">
+	        <div class="modal-header">
+	        	<#if user??>
+                	<h4 class="modal-title">编辑用户</h4>
+	        	<#else>
+	        		<h4 class="modal-title">新增用户</h4>
+	        	</#if>
+            </div>
+            <div class="modal-body">
+				<form id="addForm" class="form-horizontal" role="form">
+		    		<input type="hidden" id="userId" value="" />
+					<div class="form-body">
+						<div class="form-group">
+							<label class="col-sm-3 control-label" style="position: relative;">
+								<span style="position: absolute; color: #f6675d; left: 80px">*</span>
+								账号
+							</label>
+							<div class="col-sm-3">
+								<div class="fg-line">
+									<input type="text" id="username" class="form-control" style="width: 100px; height: 31px; width:150px">
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label" style="position: relative;">
+								<span style="position: absolute; color: #f6675d; left: 80px">*</span>
+								昵称
+							</label>
+							<div class="col-sm-6">
+								<div class="fg-line">
+									<input type="text" id="name" class="form-control" style="width: 100px; height: 31px; width:150px">
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label" style="position: relative;">
+								状态
+							</label>
+							<div class="col-sm-3">
+								<div class="fg-line">
+									<select id="status" class="selectpicker" style="width:120px; height: 31px; width:150px">
+	                                      <option value="">用户状态</option>
+	                                      <option value="1">已停用</option>
+	                                      <option value="2">未认证</option>
+	                                      <option value="3">已认证</option>
+	                                  </select>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label" style="position: relative;">
+								密码
+							</label>
+							<div class="col-sm-3">
+								<div class="fg-line">
+									<input type="password" id="password" class="form-control" style="width: 100px; height: 31px; width:150px">
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label" style="position: relative;">
+								重复密码
+							</label>
+							<div class="col-sm-3">
+								<div class="fg-line">
+									<input type="password" id="repassword" class="form-control" style="width: 100px; height: 31px; width:150px">
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label" style="position: relative;">
+								角色
+							</label>
+							<div class="col-sm-6">
+								<div class="fg-line roleInput">
+									<#list roles as role>
+									    <label><input type="checkbox" name="roleIds" value="${(role.id)!}" <#if user??><#list user.roleList as r><#if (r.id == role.id)>checked</#if></#list></#if>><i class="input-helper"></i>${(role.role)!}</label>
+									    &emsp;
+									</#list>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+		    </div>
+		    <div class="modal-footer">
+		        <button type="button" class="btn btn-info" id="save">保存</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+		</div>
+    </div>
+    <script type="text/javascript">
+    	function getRoleIds(){
+    		/*获取用户要保存的角色ids*/
+    		var rl = [];
+    		var inputs = $(".roleInput").find('input[name=roleIds]:checked');
+    		if(inputs.length > 0){
+    			$.each(inputs, function(){
+    				rl.push(Number($(this).val()));
+    			});
+    		}
+    		return rl;
+    	}
+    	
+    	function validation(){
+    		var username = $("#username").val();
+			if (username == "") {
+				app.alertErr('账号不能为空！');
+				return false;
+			}
+    		var name = $("#name").val();
+			if (name == "") {
+				app.alertErr('昵称不能为空！');
+				return false;
+			}
+			var password = $("#password").val();
+			var repassword = $("#repassword").val();
+			if (password != "" && repassword == "") {
+				app.alertErr('重复密码不能为空！');
+				return false;
+			}else if(password == "" && repassword !=""){
+				app.alertErr('密码不能为空！');
+				return false;
+			}else if(password != "" && repassword != ""){
+				if(repassword != password){
+					app.alertErr('两次密码不一致！');
+					return false;
+				}
+			}
+			if($(".roleInput").find('input[name=roleIds]:checked').length == 0){
+				app.alertErr('请选择角色！');
+				return false;
+			}
+    		return true;
+    	}
+    	
+    	
+		$(function(){
+			$('.selectpicker').selectpicker();
+			<#if user??>
+				var userId = '${user.uid}';
+				$("#userId").val(userId);
+				$("#username").val('${user.username}');
+				var name = "";
+				<#if user.name??>
+					name = '${user.name}';
+				</#if>
+				if(name != null && name != ""){
+					$("#name").val(name);
+				}
+// 				$("#status").val('${user.state}');
+				var stateValue = '${user.state}';
+				
+				//刷新选择控件
+				$("#status").find("option[value='" + stateValue + "']").attr("selected",true);
+				$('.selectpicker').selectpicker('refresh');
+			<#else>
+				$("#userId").empty();
+				$("#username").empty();
+	    	</#if>
+			/*提交*/
+			$("#save").click(function(){
+            	if(validation()){
+            		var curId = $("#userId").val();
+            		var data = {
+           				uid : $("#userId").val(),
+           				username : $.trim($("#username").val()),
+           				name : $.trim($("#name").val()),
+           				state : $("#status").val(),
+           				roleIdArrays : getRoleIds()
+            		}
+            		app.ajax({
+                		url : '/user/saveOrUpdate',
+                		type : 'POST',
+        				data : data,
+        				success : function(resp){
+        					if(resp){
+                                app.alertOk("操作成功");
+                                
+                                $('#list #data-name-'+curId).text($("#addForm #name").val());
+                                $('#list #data-username-'+curId).text($("#addForm #username").val());
+                                
+                                $('#list #data-status-'+curId).text($("#status option:selected").text());
+                                
+                                if($("#status option:selected").val() == 1){
+                                	$('#list #data-status-'+curId).removeClass().addClass("label").addClass("label-danger");
+                                }else if($("#status option:selected").val() == 2){
+                                	$('#list #data-status-'+curId).removeClass().addClass("label").addClass("label-warning");
+                                }else if($("#status option:selected").val() == 3){
+                                	$('#list #data-status-'+curId).removeClass().addClass("label").addClass("label-success");
+                                }else{
+                                	 $('#list #data-status-'+curId).text("");
+                                }
+                                
+                                $("#editModal").modal("hide");
+                                //刷新table
+//                                 $("#user-list").bootstrapTable("refresh");
+                            }
+        				},
+        				error : function(){
+        					flag = true;
+        				}
+                	});
+            	}
+            });
+			
+		})
+		
+    </script>
+</div>

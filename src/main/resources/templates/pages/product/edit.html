@@ -1,0 +1,225 @@
+<div id="editModal" class="modal fade ">
+	<style type="text/css">
+	 	.uploadPic{
+	 		width:150px;
+	 		height:120px;
+	 	}
+	 	
+	 	.defaultPic{
+	 		
+	 	}
+	 	
+	 	.picContainer{
+	 		width:480px;
+	 		height:260px;
+	 	}
+	</style>
+    <div class="modal-dialog modal-lg" style="width: 900px;">
+	    <div class="modal-content">
+	        <div class="modal-header">
+	        	<#if product??>
+                	<h4 class="modal-title">编辑商品</h4>
+	        	<#else>
+	        		<h4 class="modal-title">新增商品</h4>
+	        	</#if>
+            </div>
+            <div class="modal-body">
+            	 <form id='add' class="form-horizontal">
+			    	<input type="hidden" id="id" name="id" value="${(product.id)!}" />
+			    	<div class="form-body">
+						<div class="form-group">
+							<label class="col-sm-3 control-label" style="position: relative;">
+								<span style="position: absolute; color: #f6675d; left: 150px">*</span>
+								商品名
+							</label>
+							<div class="col-sm-3">
+								<div class="fg-line">
+									<input type="text" id="name" name="name" class="form-control" style="width: 100px; height: 31px" value="${(product.name)!}">
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label" style="position: relative;">
+								<span style="position: absolute; color: #f6675d; left: 160px">*</span>
+								数量
+							</label>
+							<div class="col-sm-3">
+								<div class="fg-line">
+									<input type="text" id="quantity" name="quantity" class="form-control" style="width: 100px; height: 31px" value="${(product.quantity)!}">
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label" style="position: relative;">
+								<span style="position: absolute; color: #f6675d; left: 160px">*</span>
+								单价
+							</label>
+							<div class="col-sm-3">
+								<div class="fg-line">
+									<input type="text" id="price" name="price" class="form-control" style="width: 100px; height: 31px" value="${(product.price)!}">
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label" style="position: relative;">
+								<span style="position: absolute; color: #f6675d; left: 135px">*</span>
+								是否特价
+							</label>
+							<div class="col-sm-3">
+								<div class="fg-line">
+									<select id="bargainFlag" type="text" name="bargainFlag" 
+										class="selectpicker" style="width:120px; height: 31px">
+							             <option value="">--请选择--</option>
+							             <#if product??>
+							              <option value="1"
+							      				<#if product.bargainFlag == 1> 
+							      					selected="selected"
+							     				</#if>>是
+							       		  </option>
+							              <option value="0"
+							      				<#if product.bargainFlag == 0> 
+							      					selected="selected"
+							     				</#if>>否
+							       		  </option>
+							       	  <#else>
+							       	  	  <option value="true">是</option>
+							              <option value="false">否</option>
+							             </#if>
+							         </select>
+				     			</div>
+							</div>
+						</div>
+				         <div class="form-group">
+							<label class="col-sm-3 control-label" style="position: relative;">
+								描述
+							</label>
+							<div class="col-sm-6">
+								<div class="fg-line">
+									<textarea id="description" type="text" name="description" class="form-control" rows="5"
+										placeholder="填写描述文字" style="padding: 7px"></textarea>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label" style="position: relative;">
+								<span style="position: absolute; color: #f6675d; left: 160px">*</span>
+								图片
+							</label>
+							<div class="col-sm-3">
+								<div class="fg-line">
+									<div id="uploadBtn" >
+										<input type="file" id="image" name="images" style="height: 31px" accept="image/gif,image/jpeg,image/jpg,image/png" multiple >
+										<img id="img" class="uploadPic" />
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+				        <button type="submit" class="btn btn-info" >保存</button>
+			            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+			        </div>
+				</form>
+		    </div>
+		</div>
+    </div>
+    
+    
+   
+    <script type="text/javascript">
+	    function validation(){
+			var name = $("#name").val();
+			if (name == null || name == "") {
+				app.alertErr('商品名不能为空！');
+				return false;
+			}
+			var price = $("#price").val();
+			if (price == null || price == "" || isNaN(price) || price < 0) {
+				app.alertErr('请输入正确的单价！');
+				return false;
+			}
+			var quantity = $("#quantity").val();
+			if (quantity == null || quantity == "" || isNaN(quantity) || quantity < 0 || !(isInteger(quantity))) {
+				app.alertErr('请输入正确的数量！');
+				return false;
+			}
+			return true;
+		}
+	    
+	    function isInteger(obj) {
+    	    return  obj%1 === 0;
+    	}
+    	
+    	/*上传图片预览*/
+    	function getFileUrl(sourceId) {   
+    	    var url;  
+    	    url = window.URL.createObjectURL(document.getElementById(sourceId).files.item(0));   
+    	    return url;   
+    	}   
+    	function preImg(sourceId, targetId) {   
+    	    var url = getFileUrl(sourceId);   
+    	    var imgPre = document.getElementById(targetId);   
+    	    imgPre.src = url;   
+    	}
+    	/*上传图片预览 end*/
+
+    	/*获取上传图片的集合*/
+    	var uploadImgFlag = false;
+    	var fileList = "";
+    	var inputElement = document.getElementById("image");
+		inputElement.addEventListener("change", handleFiles, false);
+    	function handleFiles() {
+    		fileList = this.files; /* now you can work with the file list */
+		}
+    	
+		$(function(){
+			$('.selectpicker').selectpicker();
+			var curId = $("#id").val();
+			if(curId){
+				$('#img').attr("src", '${(product.image)!}')
+			}
+			$("#image").change(function(){
+				preImg("image", "img");
+				uploadImgFlag = true;
+			});
+			
+			/*提交*/
+			 $('#add').submit(function(){
+			        var data = new FormData($('#add')[0]); 
+			        
+			        if(validation()){
+				        $.ajax({  
+				            url: '/product/saveOrUpdate',  
+				            type: 'POST',  
+				            data: data,  
+				            dataType: 'JSON',  
+				            cache: false,  
+				            processData: false,  
+				            contentType: false, 
+				            success:function(resp){  
+				            	if(resp){
+	                                app.alertOk("操作成功");
+	                                if(curId != ""){
+		                                $('#list #data-name-'+curId).text($("#add #name").val());
+		                                $('#list #data-quantity-'+curId).text($("#add #quantity").val());
+		                                $('#list #data-price-'+curId).text($("#add #price").val());
+		                                $('#list #data-description-'+curId).text($("#add #description").text());
+		                                $('#list #data-bargainFlag-'+curId).text($("#add #bargainFlag option:selected").text());
+		                                if(resp.object)
+		                                	$('#list #data-img-'+curId).attr("src", resp.object);
+		                                $("#editModal").modal("hide");
+	                                }else{
+	                                	$("#list").bootstrapTable("refresh");
+	                                }
+				            	}
+				            }   
+				        });  
+			        }
+
+			        return false;   
+		     });
+		})
+		
+		
+    </script>
+</div>

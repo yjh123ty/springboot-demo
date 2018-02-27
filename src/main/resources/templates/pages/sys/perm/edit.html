@@ -1,0 +1,123 @@
+<div id="editPermModal" class="modal fade ">
+    <div class="modal-dialog modal-lg" style="width: 600px;">
+	    <div class="modal-content">
+	        <div class="modal-header">
+	        	<#if perm??>
+                	<h4 class="modal-title">编辑权限</h4>
+	        	<#else>
+	        		<h4 class="modal-title">新增权限</h4>
+	        	</#if>
+            </div>
+            <div class="modal-body">
+				<form id="addForm" class="form-horizontal" role="form">
+		    		<input type="hidden" id="permId" value="${(perm.id)!}" />
+					<div class="form-body">
+						<div class="form-group">
+							<label class="col-sm-3 control-label" style="position: relative;">
+								<span style="position: relative; color: #f6675d;">*</span>
+								权限名
+							</label>
+							<div class="col-sm-3">
+								<div class="fg-line">
+									<input type="text" id="name" class="form-control" style="width: 100px; height: 31px" value="${(perm.name)!}">
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label" style="position: relative;">
+								<span style="position: relative; color: #f6675d;">*</span>
+								权限规则
+							</label>
+							<div class="col-sm-3">
+								<div class="fg-line">
+									<input type="text" id="permission" class="form-control" style="width: 100px; height: 31px" value="${(perm.permission)!}">
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label" style="position: relative;">
+								<span style="position: relative; color: #f6675d;">*</span>
+								资源
+							</label>
+							<div class="col-sm-6">
+								<div class="fg-line">
+									<input type="text" id="url" class="form-control" style="width: 200px; height: 31px" value="${(perm.url)!}">
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<span style="left:80px;position: relative; color: #f6675d;">注意：权限添加之后，需联系管理员进行对访问资源的代码控制</span>
+						</div>
+					</div>
+				</form>
+		    </div>
+		    <div class="modal-footer">
+		        <button type="button" class="btn btn-info" id="save">保存</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+		</div>
+    </div>
+    <script type="text/javascript">
+    	function validation(){
+			var name = $("#name").val();
+			if (name == "") {
+				app.alertErr('权限名不能为空！');
+				return false;
+			}
+			var permission = $("#permission").val();
+			if (permission == "") {
+				app.alertErr('权限规则不能为空！');
+				return false;
+			}
+			var url = $("#url").val();
+			if (url == "") {
+				app.alertErr('资源不能为空！');
+				return false;
+			}
+    		return true;
+    	}
+    	
+    	
+		$(function(){
+			$('.selectpicker').selectpicker();
+			
+			/*提交*/
+			$("#save").click(function(){
+            	if(validation()){
+            		var curId = $("#permId").val();
+            		var data = {
+           				id : curId,
+           				name : $.trim($("#name").val()),
+           				permission : $.trim($("#permission").val()),
+           				url : $.trim($("#url").val())
+            		}
+            		app.ajax({
+                		url : '/sysPerm/saveOrUpdate',
+                		type : 'POST',
+        				data : data,
+        				success : function(resp){
+        					if(resp.success){
+                                app.alertOk("操作成功");
+                                
+                               	//返回新增的id
+                                var id = resp.id;
+                                $('#list #data-id-'+curId).text(id);
+                                $('#list #data-name-'+curId).text($("#addForm #name").val());
+                                $('#list #data-permission-'+curId).text($("#addForm #permission").val());
+                                $('#list #data-url-'+curId).text($("#addForm #url").val());
+                                
+                                $("#editPermModal").modal("hide");
+                                
+                            }
+        				},
+        				error : function(){
+        					flag = true;
+        				}
+                	});
+            	}
+            });
+		})
+		
+		
+    </script>
+</div>

@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en" class="fullscreen-bg">
+<head>
+	<title>Register | 注册</title>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+	<!-- VENDOR CSS -->
+	<link rel="stylesheet" href="../static/assets/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../static/assets/vendor/font-awesome/css/font-awesome.min.css">
+	<link rel="stylesheet" href="../static/assets/vendor/linearicons/style.css">
+	<!-- MAIN CSS -->
+	<link rel="stylesheet" href="../static/assets/css/main.css">
+	<!-- FOR DEMO PURPOSES ONLY. You should remove this in your project -->
+	<link rel="stylesheet" href="../static/assets/css/demo.css">
+	<!-- GOOGLE FONTS -->
+	<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700" rel="stylesheet">
+	<!-- ICONS -->
+	<link rel="apple-touch-icon" sizes="76x76" href="../static/assets/img/apple-icon.png">
+	<link rel="icon" type="image/png" sizes="96x96" href="../static/assets/img/favicon.png">
+	<style type="text/css">
+		.error-border {
+			border-color: red;
+		}
+	</style>
+</head>
+
+<body>
+	<!-- WRAPPER -->
+	<div id="wrapper">
+		<div class="vertical-align-wrap">
+			<div class="vertical-align-middle">
+				<div class="auth-box ">
+					<div class="left">
+						<div class="content">
+							<div class="header">
+								<div class="logo text-center"><img src="../static/assets/img/logo-dark.png" alt="Klorofil Logo"></div>
+								<p class="lead">Register for your account</p>
+							</div>
+							<form class="form-auth-small" >
+								<div class="form-group">
+									<label class="control-label sr-only">用户名</label>
+									<input type="text" class="form-control" id="loginName" placeholder="用户名" onblur="checkName()">
+								</div>
+								<div class="form-group">
+									<label for="signin-password" class="control-label sr-only">密码</label>
+									<input type="password" class="form-control" id="password" placeholder="密码">
+								</div>
+								<div class="form-group">
+									<label for="signin-password" class="control-label sr-only">重复密码</label>
+									<input type="password" class="form-control" id="repassword" value="" placeholder="再次输入密码">
+								</div>
+								
+								<div class="input-group" style="width: 100%;">
+									<a id="registerBtn" href="javascript:register()" class="btn btn-primary btn-lg btn-block">注册</a>
+								</div>
+								
+							</form>
+						</div>
+					</div>
+					<div class="right">
+						<div class="overlay"></div>
+						<div class="content text">
+							<h1 class="heading">后台管理系统</h1>
+							<p>by 丶余子酱</p>
+						</div>
+					</div>
+					<div class="clearfix"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- END WRAPPER -->
+	
+	<!-- Javascript Libraries -->
+     <script src="../static/material/vendors/jquery/dist/jquery.min.js"></script>
+     <script src="../static/material/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+     
+     <script src="../static/material/vendors/Waves/dist/waves.min.js"></script>
+	
+    <script src="../static/js/jquery.validate.js"></script>
+	<script src="../static/js/app.js"></script>
+    <script src="../static/js/functions.js"></script>
+    <script src="../static/material/vendors/bootstrap-growl/bootstrap-growl.min.js"></script>
+	<script type="text/javascript">
+		function checkName(){
+			var loginName = $('#loginName').val();
+			if(loginName){
+				if(!checkText(loginName)){
+					$('#loginName').addClass('error-border');
+					app.alertErr("账号只能为数字或字母！");
+				}else{
+					$('#loginName').removeClass('error-border');
+				}
+			}else{
+				app.alertErr("用户名不能为空！");
+			}
+			
+		}
+	
+		function checkText(param){
+			var re = /^[a-zA-Z0-9]+$/;
+			return re.test(param);
+		}
+	
+		function checkParams(){
+			var loginName = $('#loginName').val();
+			var password = $('#password').val();
+			var repassword = $('#repassword').val();
+			if(loginName == ''){
+				app.alertErr("用户名不能为空！");
+				return false;
+			}
+			if(loginName.length < 6){
+				app.alertErr("用户名不能小于6位！");
+				return false;
+			}
+			if(password == ''){
+				app.alertErr("密码不能为空！");
+				return false;
+			}
+			if(!checkText(loginName) || !checkText(password)){
+				app.alertErr("账号或密码只能为数字或字母！");
+				return false;
+			}
+			if(repassword == ''){
+				app.alertErr("重复密码不能为空！");
+				return false;
+			}
+			if(repassword != password){
+				app.alertErr("两次输入密码不相同！");
+				return false;
+			}
+			//TODO:暂时关闭验证码，方便开发调试
+// 			if($('#code').val() == ''){
+// 				app.alertErr("验证码不能为空！");
+// 				return false;
+// 			}
+			return true;
+		}
+		
+		$(function(){
+	        showCodeImg();
+	    });
+		
+		
+        var flag = true;
+         function register() {
+        	 if (!flag) {
+        		 return false;
+        	 }
+        	 if(checkParams()){
+        		   var data = {
+     	        		loginName : $('#loginName').val(),
+     	        		password : $('#password').val(),
+     	        		code : $('#code').val()
+     	        	};
+       	        	app.ajax({
+       	        		url : '/register/doRegister',
+       	        		type : 'POST',
+       	        		data : data,
+       					success : function(resp){
+       						if(resp.code == 0){
+       							app.alertOk('注册成功!');
+           						setTimeout(function(){
+           							location.href = "/login";
+           						}, 500);
+       						}
+       					},
+       					error : function(resp){
+       						flag = true;
+       					},
+       					failureCallBack: function(resp){
+       						showCodeImg();
+       					}
+       	        	});
+	          }
+       		 }
+         
+       		 $('body').inputEnter(function(inputValue) {
+       			register();
+   			});
+       		 
+       		var showCodeImg = function() {
+       			$("#code").val('');
+	        	$("#code_img").attr("src","/captcha/img.html?v="+new Date().getTime());
+	            $("#need_code").show();
+	         }
+			
+       		 
+         	
+        </script>
+</body>
+
+</html>
