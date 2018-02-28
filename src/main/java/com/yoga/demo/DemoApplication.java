@@ -13,7 +13,7 @@ import com.yoga.demo.utils.wechat.SingleAccessToken;
  * 指定session失效时间 http://stackoverflow.com/questions/32501541/what-is-the-default-session-timeout-and-how-to-configure-it-when-using-the-sprin
  * @EnableRedisHttpSession 这个注解声明了一个bean,是一个过滤器 springSessionRepositoryFilter,实现 HttpSession超时后的替换功能
  * 
- * test ....
+ * 
  */
 @SpringBootApplication
 @EnableRedisHttpSession(maxInactiveIntervalInSeconds = 1200) //1分钟失效 springSessionRepositoryFilte
