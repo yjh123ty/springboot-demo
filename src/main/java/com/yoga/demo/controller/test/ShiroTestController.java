@@ -1,10 +1,9 @@
 package com.yoga.demo.controller.test;
 
-import javax.websocket.server.PathParam;
-
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.yoga.demo.domain.shiro.UserInfo;
@@ -51,7 +50,7 @@ public class ShiroTestController {
     }
     
     @RequestMapping("/findByUsername/{username}")
-    public String findByUsername(@PathParam("username")String username){
+    public String findByUsername(@PathVariable("username")String username){
     	UserInfo findByUsername = userInfoService.findByUsername(username);
     	return findByUsername.getUsername();
     }
