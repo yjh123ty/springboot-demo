@@ -4,7 +4,7 @@
 
 	<groupId>com.yoga.demo</groupId>
 	<artifactId>myboot</artifactId>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<version>0.0.1-SNAPSHOT</version>
 
 	<name>myboot Maven Webapp</name>
@@ -339,9 +339,21 @@
 
 	<build>
 		<plugins>
+			<plugin> 
+		        <groupId>org.apache.maven.plugins</groupId> 
+		        <artifactId>maven-compiler-plugin</artifactId> 
+		        <configuration> 
+		          <source>1.7</source>
+		          <target>1.7</target> 
+		          <encoding>utf-8</encoding> 
+		        </configuration> 
+		    </plugin> 
 			<plugin>
 	            <groupId>org.springframework.boot</groupId>
 	            <artifactId>spring-boot-maven-plugin</artifactId>
+	             <configuration>
+                    <executable>true</executable>
+                </configuration>
 	            <executions>
 	                <execution>
 	                    <goals>
@@ -351,14 +363,14 @@
 	            </executions>
 	        </plugin>
 			<!-- 打成war包 这种方式不利于使用jenkins部署到tomcat，原因是打成war包后，访问项目的路径必须带上项目名称 -->
-			<plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>2.1.1</version>
-                <configuration>
-                <failOnMissingWebXml>false</failOnMissingWebXml>
-            </configuration>
-            </plugin>
+<!-- 			<plugin> -->
+<!--                 <groupId>org.apache.maven.plugins</groupId> -->
+<!--                 <artifactId>maven-war-plugin</artifactId> -->
+<!--                 <version>2.1.1</version> -->
+<!--                 <configuration> -->
+<!-- 	                <failOnMissingWebXml>false</failOnMissingWebXml> -->
+<!-- 	            </configuration> -->
+<!--             </plugin> -->
 		</plugins>
 	</build>
 
