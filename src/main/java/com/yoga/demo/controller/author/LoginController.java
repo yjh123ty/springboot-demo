@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.yoga.demo.common.Constants;
 import com.yoga.demo.common.JsonMsgBean;
+import com.yoga.demo.common.annotation.WebLog;
 import com.yoga.demo.domain.dto.UserLoginDTO;
 import com.yoga.demo.domain.shiro.UserInfo;
 import com.yoga.demo.service.SysMenuService;
@@ -32,9 +34,10 @@ public class LoginController {
 	@Autowired
 	private UserInfoService userService;
 	
+	@WebLog(desc="用户登录")
 	@RequestMapping(value = "login",method = RequestMethod.GET)
-	public String toLogin(Model model){
-	       return "login";
+	public ModelAndView toLogin(Model model){
+	       return new ModelAndView("login");
 	}
 	
 	@RequestMapping(value = "checkLogin",method = RequestMethod.POST)
