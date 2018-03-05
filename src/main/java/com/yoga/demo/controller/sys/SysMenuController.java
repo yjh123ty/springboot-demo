@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.yoga.demo.common.JsonMsgBean;
+import com.yoga.demo.common.annotation.WebLog;
 import com.yoga.demo.domain.menu.SysMenu;
 import com.yoga.demo.domain.menu.dto.SysMenuSearchDTO;
 import com.yoga.demo.domain.menu.vo.SysMenuTreeVO;
@@ -52,6 +53,7 @@ public class SysMenuController {
 	@RequestMapping(value = "saveOrUpdate",method = RequestMethod.POST)
 	@ResponseBody
 	@RequiresPermissions("menu:edit")
+	@WebLog(desc = "修改菜单")
 	public JsonMsgBean saveOrUpdate(SysMenu menu){
 		if(menu.getId() != null){
 			sysMenuService.updateByPrimaryKeySelective(menu);
@@ -64,6 +66,7 @@ public class SysMenuController {
 	@RequestMapping(value = "delete",method = RequestMethod.POST)
 	@ResponseBody
 	@RequiresPermissions("menu:del")
+	@WebLog(desc = "删除菜单")
 	public JsonMsgBean delete(Integer id){
 		sysMenuService.deleteByPrimaryKey(id);
 		return JsonMsgBeanUtils.defaultSeccess();

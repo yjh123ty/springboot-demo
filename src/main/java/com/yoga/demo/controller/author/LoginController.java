@@ -34,7 +34,6 @@ public class LoginController {
 	@Autowired
 	private UserInfoService userService;
 	
-	@WebLog(desc="用户登录")
 	@RequestMapping(value = "login",method = RequestMethod.GET)
 	public ModelAndView toLogin(Model model){
 	       return new ModelAndView("login");
@@ -42,6 +41,7 @@ public class LoginController {
 	
 	@RequestMapping(value = "checkLogin",method = RequestMethod.POST)
 	@ResponseBody
+	@WebLog(desc="用户登录")
 	public JsonMsgBean checkLogin(@RequestBody UserLoginDTO userLogin, HttpSession session){
 		//TODO：为了便于开发，暂时关闭验证码校验
 //		if (!StringUtils.equalsIgnoreCase(userLogin.getCode(), ShiroUtils.getCaptcha())) {

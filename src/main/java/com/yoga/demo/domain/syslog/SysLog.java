@@ -20,6 +20,8 @@ public class SysLog extends BaseDO{
 	private String description;
 	
 	private String uri;
+	
+	private String requestBody;
 
 	public String getUsername() {
 		return username;
@@ -62,10 +64,18 @@ public class SysLog extends BaseDO{
 		this.uri = uri;
 	}
 
+	public String getRequestBody() {
+		return requestBody;
+	}
+
+	public void setRequestBody(String requestBody) {
+		this.requestBody = requestBody;
+	}
+
 	@Override
 	public String toString() {
 		return "SysLog [username=" + username + ", action=" + action + ", ip=" + ip + ", description=" + description
-				+ ", uri=" + uri + "]";
+				+ ", uri=" + uri + ", requestBody=" + requestBody + "]";
 	}
 
 	
