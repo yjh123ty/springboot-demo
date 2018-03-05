@@ -98,15 +98,17 @@
         				success : function(resp){
         					if(resp.success){
                                 app.alertOk("操作成功");
-                                
-                               	//返回新增的id
-                                var id = resp.id;
-                                $('#list #data-id-'+curId).text(id);
-                                $('#list #data-name-'+curId).text($("#addForm #name").val());
-                                $('#list #data-permission-'+curId).text($("#addForm #permission").val());
-                                $('#list #data-url-'+curId).text($("#addForm #url").val());
-                                
-                                $("#editPermModal").modal("hide");
+        						if(curId){
+	                               	//返回新增的id
+	                                var id = resp.id;
+	                                $('#list #data-id-'+curId).text(id);
+	                                $('#list #data-name-'+curId).text($("#addForm #name").val());
+	                                $('#list #data-permission-'+curId).text($("#addForm #permission").val());
+	                                $('#list #data-url-'+curId).text($("#addForm #url").val());
+        						}else{
+        							$("#list").bootstrapTable("refresh");
+        						}
+        						$("#editPermModal").modal("hide");
                                 
                             }
         				},

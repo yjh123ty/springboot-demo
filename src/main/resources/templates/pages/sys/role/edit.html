@@ -123,16 +123,20 @@
         				success : function(resp){
         					if(resp){
                                 app.alertOk("操作成功");
-                               	$('#list #data-role-'+roleId).text($("#addForm #role").val());
-                                $('#list #data-des-'+roleId).text($("#addForm #description").val());
-                                $('#list #data-ava-'+roleId).text($("#available option:selected").text());
-                                
-                                if($("#available option:selected").val() == 'false'){
-                                	$('#list #data-ava-'+roleId).removeClass().addClass("label").addClass("label-danger");
-                                }else if($("#available option:selected").val() == 'true'){
-                                	$('#list #data-ava-'+roleId).removeClass().addClass("label").addClass("label-success");
+                                if(roleId){
+	                               	$('#list #data-role-'+roleId).text($("#addForm #role").val());
+	                                $('#list #data-des-'+roleId).text($("#addForm #description").val());
+	                                $('#list #data-ava-'+roleId).text($("#available option:selected").text());
+	                                
+	                                if($("#available option:selected").val() == 'false'){
+	                                	$('#list #data-ava-'+roleId).removeClass().addClass("label").addClass("label-danger");
+	                                }else if($("#available option:selected").val() == 'true'){
+	                                	$('#list #data-ava-'+roleId).removeClass().addClass("label").addClass("label-success");
+	                                }else{
+	                                	 $('#list #data-ava-'+roleId).text("");
+	                                }
                                 }else{
-                                	 $('#list #data-ava-'+roleId).text("");
+                                	$("#list").bootstrapTable("refresh");
                                 }
                                 $("#editModal1").modal("hide");
                             }

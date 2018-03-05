@@ -82,8 +82,8 @@
 							     				</#if>>否
 							       		  </option>
 							       	  <#else>
-							       	  	  <option value="true">是</option>
-							              <option value="false">否</option>
+							       	  	  <option value="1">是</option>
+							              <option value="0">否</option>
 							             </#if>
 							         </select>
 				     			</div>
@@ -207,10 +207,10 @@
 		                                $('#list #data-bargainFlag-'+curId).text($("#add #bargainFlag option:selected").text());
 		                                if(resp.object)
 		                                	$('#list #data-img-'+curId).attr("src", resp.object);
-		                                $("#editModal").modal("hide");
 	                                }else{
 	                                	$("#list").bootstrapTable("refresh");
 	                                }
+	                                $("#editModal").modal("hide");
 				            	}
 				            }   
 				        });  

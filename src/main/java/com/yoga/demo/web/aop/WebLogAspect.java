@@ -160,7 +160,6 @@ public class WebLogAspect {
                 	desc = method.getAnnotation(WebLog.class).desc();
                 	JSONObject json = new JSONObject();
         			for (Object arg : arguments) {
-        				System.err.println(arg.getClass().getName());
         				json.put(arg.getClass().getName(), arg.toString());
         			}
         			String paramsStr = json == null ? "" : json.toString();
@@ -178,6 +177,7 @@ public class WebLogAspect {
         	        	log.setIp(request.getRemoteAddr());
         	        	log.setAction(targetClass.getName() + "." + methodName);
         	        	log.setRequestBody(paramsStr);
+        	        	log.setCreateTime(new Date());
         	        	sysLogService.saveLog(log);
         	        }
                 }

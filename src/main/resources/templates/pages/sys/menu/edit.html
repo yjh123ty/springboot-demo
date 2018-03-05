@@ -129,11 +129,14 @@
         				success : function(resp){
         					if(resp){
                                 app.alertOk("操作成功");
-                                
-                               	 $('#list #data-name-'+curId).text($("#addForm #name").val());
-                                 $('#list #data-url-'+curId).text($("#addForm #url").val());
-                                 $('#list #data-pname-'+curId).text($("#parentId option:selected").text());
-                                 $("#editModal").modal("hide");
+                                if(curId){
+	                               	 $('#list #data-name-'+curId).text($("#addForm #name").val());
+	                                 $('#list #data-url-'+curId).text($("#addForm #url").val());
+	                                 $('#list #data-pname-'+curId).text($("#parentId option:selected").text());
+                                }else{
+                                	$("#list").bootstrapTable("refresh");
+                                }
+                                $("#editModal").modal("hide");
                             }
         				},
         				error : function(){

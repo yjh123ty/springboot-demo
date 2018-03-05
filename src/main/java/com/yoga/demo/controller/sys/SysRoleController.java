@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.yoga.demo.common.JsonMsgBean;
 import com.yoga.demo.common.Page;
+import com.yoga.demo.common.annotation.WebLog;
 import com.yoga.demo.domain.menu.SysMenu;
 import com.yoga.demo.domain.shiro.SysPermission;
 import com.yoga.demo.domain.shiro.SysRole;
@@ -71,6 +73,7 @@ public class SysRoleController {
 	
 	@RequestMapping(value = "saveOrUpdate",method = RequestMethod.POST)
 	@ResponseBody
+	@RequiresPermissions("perm:edit")
 	public JsonMsgBean saveOrUpdate(SysRole role){
 		if(role.getId() != null){
 			sysRoleService.update(role);
@@ -130,6 +133,8 @@ public class SysRoleController {
 	 */
 	@RequestMapping(value = "delete",method = RequestMethod.POST)
 	@ResponseBody
+	@RequiresPermissions("perm:del")
+	@WebLog(desc="删除角色")
 //	@RequiresPermissions("role:del")
 	public JsonMsgBean delete(Integer id){
 		sysRoleService.delete(id);

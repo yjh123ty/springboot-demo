@@ -11,6 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.yoga.demo.common.JsonMsgBean;
 import com.yoga.demo.common.Page;
+import com.yoga.demo.common.annotation.WebLog;
 import com.yoga.demo.domain.shiro.SysPermission;
 import com.yoga.demo.domain.shiro.dto.SysPermSearchDTO;
 import com.yoga.demo.service.SysPermissionService;
@@ -50,6 +51,8 @@ public class SysPermissionController {
 	
 	@RequestMapping(value = "saveOrUpdate",method = RequestMethod.POST)
 	@ResponseBody
+	@RequiresPermissions("perm:edit")
+	@WebLog(desc="编辑权限")
 	public JsonMsgBean saveOrUpdate(SysPermission perm){
  		Integer userId = ShiroUtils.getUserId();
 		perm.setLastUpdateUserId(userId);
@@ -69,6 +72,7 @@ public class SysPermissionController {
 	@RequestMapping(value = "delete",method = RequestMethod.POST)
 	@ResponseBody
 	@RequiresPermissions("perm:del")
+	@WebLog(desc="删除权限")
 	public JsonMsgBean delete(Integer id){
 		permissionService.deleteByPrimaryKey(id, ShiroUtils.getUserId());
 		return JsonMsgBeanUtils.defaultSeccess();

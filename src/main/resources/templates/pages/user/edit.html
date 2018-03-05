@@ -178,25 +178,22 @@
         				success : function(resp){
         					if(resp){
                                 app.alertOk("操作成功");
-                                
-                                $('#list #data-name-'+curId).text($("#addForm #name").val());
-                                $('#list #data-username-'+curId).text($("#addForm #username").val());
-                                
-                                $('#list #data-status-'+curId).text($("#status option:selected").text());
-                                
-                                if($("#status option:selected").val() == 1){
-                                	$('#list #data-status-'+curId).removeClass().addClass("label").addClass("label-danger");
-                                }else if($("#status option:selected").val() == 2){
-                                	$('#list #data-status-'+curId).removeClass().addClass("label").addClass("label-warning");
-                                }else if($("#status option:selected").val() == 3){
-                                	$('#list #data-status-'+curId).removeClass().addClass("label").addClass("label-success");
-                                }else{
-                                	 $('#list #data-status-'+curId).text("");
-                                }
-                                
+                                if(curId){
+                                	$('#list #data-name-'+curId).text($("#addForm #name").val());
+                                    $('#list #data-username-'+curId).text($("#addForm #username").val());
+                                    $('#list #data-status-'+curId).text($("#status option:selected").text());
+                                    if($("#status option:selected").val() == 1){
+                                    	$('#list #data-status-'+curId).removeClass().addClass("label").addClass("label-danger");
+                                    }else if($("#status option:selected").val() == 2){
+                                    	$('#list #data-status-'+curId).removeClass().addClass("label").addClass("label-warning");
+                                    }else if($("#status option:selected").val() == 3){
+                                    	$('#list #data-status-'+curId).removeClass().addClass("label").addClass("label-success");
+                                    }else{
+                                    	 $('#list #data-status-'+curId).text("");
+                                    }
+                                }else
+	                                $("#user-list").bootstrapTable("refresh");
                                 $("#editModal").modal("hide");
-                                //刷新table
-//                                 $("#user-list").bootstrapTable("refresh");
                             }
         				},
         				error : function(){
