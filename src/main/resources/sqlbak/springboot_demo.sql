@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50528
 File Encoding         : 65001
 
-Date: 2018-02-12 18:05:55
+Date: 2018-03-05 17:33:45
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -39,7 +39,7 @@ INSERT INTO `order_item` VALUES ('1', '1', '1', '1', '1', '1');
 -- ----------------------------
 DROP TABLE IF EXISTS `product`;
 CREATE TABLE `product` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
   `description` varchar(255) DEFAULT NULL,
   `quantity` int(11) DEFAULT NULL,
@@ -49,20 +49,21 @@ CREATE TABLE `product` (
   `create_time` datetime DEFAULT NULL,
   `is_delete` bit(1) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of product
 -- ----------------------------
-INSERT INTO `product` VALUES ('1', '苹果', 'x', '10', '1', '0', 'http://localhost:8090/images/product/e66d8f9a74f3a08ef8c40ef136f54996.jpg', null, '\0');
-INSERT INTO `product` VALUES ('2', '梨子', '', '0', '2', '0', 'http://localhost:8090/images/product/79be0a0fcb4143afa40b9770c1b72eac.png', null, '\0');
-INSERT INTO `product` VALUES ('3', '香蕉', 'e', '40', '3', '0', null, null, '\0');
+INSERT INTO `product` VALUES ('1', '苹果', '', '10', '1', '0', 'http://localhost:8090/images/product/4dce3a4542674411a9e70ce453377b7f.jpg', null, '\0');
+INSERT INTO `product` VALUES ('2', '梨子', '', '2', '222', '0', 'http://localhost:8090/images/product/5dacdf2cc35c4eb8a5390a0e43e64981.jpg', null, '\0');
+INSERT INTO `product` VALUES ('3', '香蕉', '', '40', '3', '0', 'http://localhost:8090/images/product/ba0fb8256e954a77bb14ac0961c18454.jpg', null, '\0');
 INSERT INTO `product` VALUES ('4', '火龙果', 'e', '30', '2', '0', null, null, '\0');
 INSERT INTO `product` VALUES ('5', '西瓜', 'r', '20', '1', '0', null, null, '\0');
 INSERT INTO `product` VALUES ('6', '草莓', 'we', '60', '2', '0', null, null, '\0');
 INSERT INTO `product` VALUES ('7', '柚子', 'sdf', '90', '3', '1', null, null, '\0');
 INSERT INTO `product` VALUES ('8', '葡萄', 'ds', '100', '5', '0', null, null, '\0');
 INSERT INTO `product` VALUES ('9', 'xxx', null, '1', '1', null, null, '2018-01-25 15:30:31', null);
+INSERT INTO `product` VALUES ('10', '123', '', '1', '1', '1', 'http://192.168.4.5:8090/images/product/c0644f1b82f34415942d37e1a6a6aab4.png', '2018-03-05 17:32:51', '\0');
 
 -- ----------------------------
 -- Table structure for product_img
@@ -80,6 +81,49 @@ CREATE TABLE `product_img` (
 -- ----------------------------
 
 -- ----------------------------
+-- Table structure for sys_log
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_log`;
+CREATE TABLE `sys_log` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(32) DEFAULT NULL,
+  `action` varchar(128) DEFAULT NULL,
+  `ip` varchar(32) DEFAULT NULL,
+  `description` varchar(64) DEFAULT NULL,
+  `uri` varchar(128) DEFAULT NULL,
+  `request_body` text,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of sys_log
+-- ----------------------------
+INSERT INTO `sys_log` VALUES ('1', 'admin', 'com.yoga.demo.controller.author.LoginController.checkLogin', '0:0:0:0:0:0:0:1', '用户登录', '/checkLogin', '{\"com.yoga.demo.domain.dto.UserLoginDTO\":\"UserLoginDTO [loginName=admin, password=1, orgCode=null, code=]\",\"org.springframework.session.web.http.SessionRepositoryFilter$SessionRepositoryRequestWrapper$HttpSessionWrapper\":\"org.springframework.session.web.http.SessionRepositoryFilter$SessionRepositoryRequestWrapper$HttpSessionWrapper@5bb0bae0\"}');
+INSERT INTO `sys_log` VALUES ('2', 'admin', 'com.yoga.demo.controller.author.LoginController.checkLogin', '0:0:0:0:0:0:0:1', '用户登录', '/checkLogin', '{\"com.yoga.demo.domain.dto.UserLoginDTO\":\"UserLoginDTO [loginName=admin, password=1, orgCode=null, code=]\",\"org.springframework.session.web.http.SessionRepositoryFilter$SessionRepositoryRequestWrapper$HttpSessionWrapper\":\"org.springframework.session.web.http.SessionRepositoryFilter$SessionRepositoryRequestWrapper$HttpSessionWrapper@63039ece\"}');
+INSERT INTO `sys_log` VALUES ('3', 'admin', 'com.yoga.demo.controller.author.LoginController.checkLogin', '192.168.4.5', '用户登录', '/checkLogin', '{\"com.yoga.demo.domain.dto.UserLoginDTO\":\"UserLoginDTO [loginName=admin, password=1, orgCode=null, code=]\",\"org.springframework.session.web.http.SessionRepositoryFilter$SessionRepositoryRequestWrapper$HttpSessionWrapper\":\"org.springframework.session.web.http.SessionRepositoryFilter$SessionRepositoryRequestWrapper$HttpSessionWrapper@7ebb388c\"}');
+INSERT INTO `sys_log` VALUES ('4', 'yu', 'com.yoga.demo.controller.author.LoginController.checkLogin', '192.168.4.5', '用户登录', '/checkLogin', '{\"com.yoga.demo.domain.dto.UserLoginDTO\":\"UserLoginDTO [loginName=yu, password=1, orgCode=null, code=]\",\"org.springframework.session.web.http.SessionRepositoryFilter$SessionRepositoryRequestWrapper$HttpSessionWrapper\":\"org.springframework.session.web.http.SessionRepositoryFilter$SessionRepositoryRequestWrapper$HttpSessionWrapper@410c5670\"}');
+INSERT INTO `sys_log` VALUES ('5', 'admin', 'com.yoga.demo.controller.author.LoginController.checkLogin', '192.168.4.5', '用户登录', '/checkLogin', '{\"com.yoga.demo.domain.dto.UserLoginDTO\":\"UserLoginDTO [loginName=admin, password=1, orgCode=null, code=]\",\"org.springframework.session.web.http.SessionRepositoryFilter$SessionRepositoryRequestWrapper$HttpSessionWrapper\":\"org.springframework.session.web.http.SessionRepositoryFilter$SessionRepositoryRequestWrapper$HttpSessionWrapper@1591e291\"}');
+INSERT INTO `sys_log` VALUES ('6', 'admin', 'com.yoga.demo.controller.sys.SysMenuController.saveOrUpdate', '192.168.4.5', '修改菜单', '/sysMenu/saveOrUpdate', '{\"com.yoga.demo.domain.menu.SysMenu\":\"com.yoga.demo.domain.menu.SysMenu@2fd7e94a\"}');
+INSERT INTO `sys_log` VALUES ('7', 'admin', 'com.yoga.demo.controller.author.LoginController.checkLogin', '0:0:0:0:0:0:0:1', '用户登录', '/checkLogin', '{\"com.yoga.demo.domain.dto.UserLoginDTO\":\"UserLoginDTO [loginName=admin, password=1, orgCode=null, code=]\",\"org.springframework.session.web.http.SessionRepositoryFilter$SessionRepositoryRequestWrapper$HttpSessionWrapper\":\"org.springframework.session.web.http.SessionRepositoryFilter$SessionRepositoryRequestWrapper$HttpSessionWrapper@5c5aa3ca\"}');
+INSERT INTO `sys_log` VALUES ('8', 'admin', 'com.yoga.demo.controller.sys.SysPermissionController.saveOrUpdate', '0:0:0:0:0:0:0:1', '编辑权限', '/sysPerm/saveOrUpdate', '{\"com.yoga.demo.domain.shiro.SysPermission\":\"SysPermission [id=null, name=权限编辑, resourceType=null, url=/sysPerm/saveOrUpdate, permission=perm:edit, parentId=null, parentIds=null, available=true\"}');
+INSERT INTO `sys_log` VALUES ('9', 'admin', 'com.yoga.demo.controller.author.LoginController.checkLogin', '0:0:0:0:0:0:0:1', '用户登录', '/checkLogin', '{\"com.yoga.demo.domain.dto.UserLoginDTO\":\"UserLoginDTO [loginName=admin, password=1, orgCode=null, code=]\",\"org.springframework.session.web.http.SessionRepositoryFilter$SessionRepositoryRequestWrapper$HttpSessionWrapper\":\"org.springframework.session.web.http.SessionRepositoryFilter$SessionRepositoryRequestWrapper$HttpSessionWrapper@56c3e32e\"}');
+INSERT INTO `sys_log` VALUES ('10', 'admin', 'com.yoga.demo.controller.sys.SysPermissionController.saveOrUpdate', '0:0:0:0:0:0:0:1', '编辑权限', '/sysPerm/saveOrUpdate', '{\"com.yoga.demo.domain.shiro.SysPermission\":\"SysPermission [id=9, name=权限编, resourceType=null, url=/sysPerm/saveOrUpdate, permission=perm:edit, parentId=null, parentIds=null, available=null\"}');
+INSERT INTO `sys_log` VALUES ('11', 'admin', 'com.yoga.demo.controller.sys.SysPermissionController.saveOrUpdate', '0:0:0:0:0:0:0:1', '编辑权限', '/sysPerm/saveOrUpdate', '{\"com.yoga.demo.domain.shiro.SysPermission\":\"SysPermission [id=9, name=权限编辑, resourceType=null, url=/sysPerm/saveOrUpdate, permission=perm:edit, parentId=null, parentIds=null, available=null\"}');
+INSERT INTO `sys_log` VALUES ('12', 'admin', 'com.yoga.demo.controller.sys.SysPermissionController.delete', '0:0:0:0:0:0:0:1', '删除权限', '/sysPerm/delete', '{\"java.lang.Integer\":\"9\"}');
+INSERT INTO `sys_log` VALUES ('13', 'admin', 'com.yoga.demo.controller.author.LoginController.checkLogin', '0:0:0:0:0:0:0:1', '用户登录', '/checkLogin', '{\"com.yoga.demo.domain.dto.UserLoginDTO\":\"UserLoginDTO [loginName=admin, password=1, orgCode=null, code=]\",\"org.springframework.session.web.http.SessionRepositoryFilter$SessionRepositoryRequestWrapper$HttpSessionWrapper\":\"org.springframework.session.web.http.SessionRepositoryFilter$SessionRepositoryRequestWrapper$HttpSessionWrapper@34391a2\"}');
+INSERT INTO `sys_log` VALUES ('14', 'admin', 'com.yoga.demo.controller.author.LoginController.checkLogin', '0:0:0:0:0:0:0:1', '用户登录', '/checkLogin', '{\"com.yoga.demo.domain.dto.UserLoginDTO\":\"UserLoginDTO [loginName=admin, password=1, orgCode=null, code=]\",\"org.springframework.session.web.http.SessionRepositoryFilter$SessionRepositoryRequestWrapper$HttpSessionWrapper\":\"org.springframework.session.web.http.SessionRepositoryFilter$SessionRepositoryRequestWrapper$HttpSessionWrapper@21f764a8\"}');
+INSERT INTO `sys_log` VALUES ('15', 'admin', 'com.yoga.demo.controller.sys.SysPermissionController.delete', '0:0:0:0:0:0:0:1', '删除权限', '/sysPerm/delete', '{\"java.lang.Integer\":\"9\"}');
+INSERT INTO `sys_log` VALUES ('16', 'admin', 'com.yoga.demo.controller.sys.SysPermissionController.saveOrUpdate', '0:0:0:0:0:0:0:1', '编辑权限', '/sysPerm/saveOrUpdate', '{\"com.yoga.demo.domain.shiro.SysPermission\":\"SysPermission [id=9, name=权限编辑1, resourceType=null, url=/sysPerm/saveOrUpdate, permission=perm:edit, parentId=null, parentIds=null, available=null\"}');
+INSERT INTO `sys_log` VALUES ('17', 'admin', 'com.yoga.demo.controller.sys.SysPermissionController.saveOrUpdate', '0:0:0:0:0:0:0:1', '编辑权限', '/sysPerm/saveOrUpdate', '{\"com.yoga.demo.domain.shiro.SysPermission\":\"SysPermission [id=9, name=权限编辑, resourceType=null, url=/sysPerm/saveOrUpdate, permission=perm:edit, parentId=null, parentIds=null, available=null\"}');
+INSERT INTO `sys_log` VALUES ('18', 'admin', 'com.yoga.demo.controller.sys.SysPermissionController.saveOrUpdate', '0:0:0:0:0:0:0:1', '编辑权限', '/sysPerm/saveOrUpdate', '{\"com.yoga.demo.domain.shiro.SysPermission\":\"SysPermission [id=null, name=权限删除, resourceType=null, url=/sysPerm/delete, permission=perm:del, parentId=null, parentIds=null, available=true\"}');
+INSERT INTO `sys_log` VALUES ('19', 'admin', 'com.yoga.demo.controller.sys.SysRoleController.delete', '0:0:0:0:0:0:0:1', '删除角色', '/sysRole/delete', '{\"java.lang.Integer\":\"6\"}');
+INSERT INTO `sys_log` VALUES ('20', 'admin', 'com.yoga.demo.controller.sys.SysPermissionController.saveOrUpdate', '0:0:0:0:0:0:0:1', '编辑权限', '/sysPerm/saveOrUpdate', '{\"com.yoga.demo.domain.shiro.SysPermission\":\"SysPermission [id=null, name=11, resourceType=null, url=1, permission=1, parentId=null, parentIds=null, available=true\"}');
+INSERT INTO `sys_log` VALUES ('21', 'admin', 'com.yoga.demo.controller.sys.SysPermissionController.delete', '0:0:0:0:0:0:0:1', '删除权限', '/sysPerm/delete', '{\"java.lang.Integer\":\"11\"}');
+INSERT INTO `sys_log` VALUES ('22', 'admin', 'com.yoga.demo.controller.sys.SysPermissionController.saveOrUpdate', '0:0:0:0:0:0:0:1', '编辑权限', '/sysPerm/saveOrUpdate', '{\"com.yoga.demo.domain.shiro.SysPermission\":\"SysPermission [id=null, name=1, resourceType=null, url=1, permission=1, parentId=null, parentIds=null, available=true\"}');
+INSERT INTO `sys_log` VALUES ('23', 'admin', 'com.yoga.demo.controller.sys.SysPermissionController.delete', '0:0:0:0:0:0:0:1', '删除权限', '/sysPerm/delete', '{\"java.lang.Integer\":\"12\"}');
+INSERT INTO `sys_log` VALUES ('24', 'admin', 'com.yoga.demo.controller.sys.SysRoleController.delete', '0:0:0:0:0:0:0:1', '删除角色', '/sysRole/delete', '{\"java.lang.Integer\":\"7\"}');
+
+-- ----------------------------
 -- Table structure for sys_menu
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_menu`;
@@ -91,7 +135,7 @@ CREATE TABLE `sys_menu` (
   `parent_id` int(11) DEFAULT NULL,
   `order` int(2) DEFAULT NULL COMMENT '排序',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of sys_menu
@@ -122,19 +166,20 @@ CREATE TABLE `sys_permission` (
   `url` varchar(255) DEFAULT NULL,
   `last_update_user_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of sys_permission
 -- ----------------------------
 INSERT INTO `sys_permission` VALUES ('1', '', '用户编辑', null, '', 'userInfo:edit', 'button', '/user/saveOrUpdate', null);
 INSERT INTO `sys_permission` VALUES ('2', '', '用户删除', null, '', 'userInfo:del', 'button', '/user/delete', null);
-INSERT INTO `sys_permission` VALUES ('3', '', 'xxxx', null, null, 'xx', null, '/xx', null);
+INSERT INTO `sys_permission` VALUES ('3', '', '商品编辑', null, null, 'product:edit', null, '/product/saveOrUpdate', '1');
 INSERT INTO `sys_permission` VALUES ('4', '', '菜单编辑', null, null, 'menu:edit', null, '/sysMenu/saveOrUpdate', '1');
 INSERT INTO `sys_permission` VALUES ('5', '', '菜单删除', null, null, 'menu:del', null, '/sysMenu/delete', '1');
-INSERT INTO `sys_permission` VALUES ('6', '\0', '', null, null, '', null, '', '1');
-INSERT INTO `sys_permission` VALUES ('7', '\0', '', null, null, '', null, '', '1');
-INSERT INTO `sys_permission` VALUES ('8', '\0', '', null, null, '', null, '', '1');
+INSERT INTO `sys_permission` VALUES ('9', '', '权限编辑', null, null, 'perm:edit', null, '/sysPerm/saveOrUpdate', '1');
+INSERT INTO `sys_permission` VALUES ('10', '', '权限删除', null, null, 'perm:del', null, '/sysPerm/delete', '1');
+INSERT INTO `sys_permission` VALUES ('11', '\0', '11', null, null, '1', null, '1', '1');
+INSERT INTO `sys_permission` VALUES ('12', '\0', '1', null, null, '1', null, '1', '1');
 
 -- ----------------------------
 -- Table structure for sys_role
@@ -146,7 +191,7 @@ CREATE TABLE `sys_role` (
   `description` varchar(255) DEFAULT NULL,
   `available` bit(1) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of sys_role
@@ -171,10 +216,6 @@ CREATE TABLE `sys_role_menu` (
 INSERT INTO `sys_role_menu` VALUES ('4', '31');
 INSERT INTO `sys_role_menu` VALUES ('17', '1');
 INSERT INTO `sys_role_menu` VALUES ('3', '0');
-INSERT INTO `sys_role_menu` VALUES ('2', '0');
-INSERT INTO `sys_role_menu` VALUES ('2', '6');
-INSERT INTO `sys_role_menu` VALUES ('2', '7');
-INSERT INTO `sys_role_menu` VALUES ('2', '8');
 INSERT INTO `sys_role_menu` VALUES ('5', '1');
 INSERT INTO `sys_role_menu` VALUES ('5', '4');
 INSERT INTO `sys_role_menu` VALUES ('5', '5');
@@ -188,6 +229,11 @@ INSERT INTO `sys_role_menu` VALUES ('1', '6');
 INSERT INTO `sys_role_menu` VALUES ('1', '7');
 INSERT INTO `sys_role_menu` VALUES ('1', '8');
 INSERT INTO `sys_role_menu` VALUES ('1', '9');
+INSERT INTO `sys_role_menu` VALUES ('2', '0');
+INSERT INTO `sys_role_menu` VALUES ('2', '6');
+INSERT INTO `sys_role_menu` VALUES ('2', '7');
+INSERT INTO `sys_role_menu` VALUES ('2', '8');
+INSERT INTO `sys_role_menu` VALUES ('2', '9');
 
 -- ----------------------------
 -- Table structure for sys_role_permission
@@ -202,11 +248,14 @@ CREATE TABLE `sys_role_permission` (
 -- Records of sys_role_permission
 -- ----------------------------
 INSERT INTO `sys_role_permission` VALUES ('4', '5');
-INSERT INTO `sys_role_permission` VALUES ('1', '1');
-INSERT INTO `sys_role_permission` VALUES ('2', '1');
-INSERT INTO `sys_role_permission` VALUES ('3', '1');
-INSERT INTO `sys_role_permission` VALUES ('5', '1');
+INSERT INTO `sys_role_permission` VALUES ('3', '2');
+INSERT INTO `sys_role_permission` VALUES ('1', '2');
 INSERT INTO `sys_role_permission` VALUES ('4', '1');
+INSERT INTO `sys_role_permission` VALUES ('5', '1');
+INSERT INTO `sys_role_permission` VALUES ('3', '1');
+INSERT INTO `sys_role_permission` VALUES ('2', '1');
+INSERT INTO `sys_role_permission` VALUES ('1', '1');
+INSERT INTO `sys_role_permission` VALUES ('9', '1');
 
 -- ----------------------------
 -- Table structure for sys_user_role
