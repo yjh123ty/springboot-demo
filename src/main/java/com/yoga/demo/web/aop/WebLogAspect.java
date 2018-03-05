@@ -145,7 +145,6 @@ public class WebLogAspect {
         String methodName = joinPoint.getSignature().getName();  
         Object[] arguments = joinPoint.getArgs();  
         Class<?> targetClass = null;
-        joinPoint.get
         try {
             targetClass = Class.forName(targetName);
         } catch (ClassNotFoundException e) {
