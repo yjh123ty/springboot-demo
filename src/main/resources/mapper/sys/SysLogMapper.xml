@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yoga.demo.mapper.syslog.SysLogMapper" >
+  <resultMap id="BaseResultMap" type="com.yoga.demo.domain.syslog.SysLog" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="action" property="action" jdbcType="VARCHAR" />
+    <result column="ip" property="ip" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="uri" property="uri" jdbcType="VARCHAR" />
+    <result column="request_body" property="requestBody" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, username, action, ip, description, uri, request_body
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_log
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from sys_log
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yoga.demo.domain.syslog.SysLog" >
+    insert into sys_log (id, username, action, 
+      ip, description, uri, 
+      request_body)
+    values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{action,jdbcType=VARCHAR}, 
+      #{ip,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, #{uri,jdbcType=VARCHAR}, 
+      #{requestBody,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yoga.demo.domain.syslog.SysLog" >
+    insert into sys_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="username != null" >
+        username,
+      </if>
+      <if test="action != null" >
+        action,
+      </if>
+      <if test="ip != null" >
+        ip,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="uri != null" >
+        uri,
+      </if>
+      <if test="requestBody != null" >
+        request_body
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="username != null" >
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="action != null" >
+        #{action,jdbcType=VARCHAR},
+      </if>
+      <if test="ip != null" >
+        #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="uri != null" >
+        #{uri,jdbcType=VARCHAR},
+      </if>
+      <if test="requestBody != null" >
+        #{requestBody,jdbcType=VARCHAR}
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yoga.demo.domain.syslog.SysLog" >
+    update sys_log
+    <set >
+      <if test="username != null" >
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="action != null" >
+        action = #{action,jdbcType=VARCHAR},
+      </if>
+      <if test="ip != null" >
+        ip = #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="uri != null" >
+        uri = #{uri,jdbcType=VARCHAR},
+      </if>
+      <if test="requestBody != null" >
+        request_body = #{requestBody,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yoga.demo.domain.syslog.SysLog" >
+    update sys_log
+    set username = #{username,jdbcType=VARCHAR},
+      action = #{action,jdbcType=VARCHAR},
+      ip = #{ip,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      uri = #{uri,jdbcType=VARCHAR},
+      request_body = #{requestBody,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

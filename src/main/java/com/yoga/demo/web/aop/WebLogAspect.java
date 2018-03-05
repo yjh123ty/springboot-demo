@@ -13,6 +13,7 @@ import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -20,6 +21,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import com.yoga.demo.common.annotation.WebLog;
 import com.yoga.demo.domain.shiro.UserInfo;
 import com.yoga.demo.domain.syslog.SysLog;
+import com.yoga.demo.service.SysLogService;
 import com.yoga.demo.utils.shiro.ShiroUtils;
 
 import net.sf.json.JSONObject;
@@ -33,6 +35,9 @@ import net.sf.json.JSONObject;
 @Component
 public class WebLogAspect {
 	private static Logger logger = LoggerFactory.getLogger(WebLogAspect.class);
+	
+	@Autowired
+	private SysLogService sysLogService;
 	
 	@Pointcut("execution(public * com.yoga.demo.controller..*.*(..))")
     public void webLog() {
@@ -140,6 +145,7 @@ public class WebLogAspect {
         String methodName = joinPoint.getSignature().getName();  
         Object[] arguments = joinPoint.getArgs();  
         Class<?> targetClass = null;
+        joinPoint.get
         try {
             targetClass = Class.forName(targetName);
         } catch (ClassNotFoundException e) {
@@ -173,8 +179,7 @@ public class WebLogAspect {
         	        	log.setIp(request.getRemoteAddr());
         	        	log.setAction(targetClass.getName() + "." + methodName);
         	        	log.setRequestBody(paramsStr);
-        	        	
-        	        	System.err.println(log.toString());
+        	        	sysLogService.saveLog(log);
         	        }
                 }
             }  

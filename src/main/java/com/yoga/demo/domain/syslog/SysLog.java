@@ -9,8 +9,8 @@ import com.yoga.demo.domain.BaseDO;
  */
 public class SysLog extends BaseDO{
 
-	private static final long serialVersionUID = 1L;
-	
+	private static final long serialVersionUID = -6476573532832459957L;
+
 	private String username;
 	
 	private String action;

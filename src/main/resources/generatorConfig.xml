@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
-<generatorConfiguration >
+<generatorConfiguration>
   <!-- 引入配置文件 -->  
   <properties resource="application.properties"/>  
       
@@ -28,7 +28,7 @@
     	targetProject  生成domain对象的项目路径 从项目名字开始
 
      -->
-    <javaModelGenerator targetPackage="com.yoga.demo.domain.product" targetProject="springboot-demo/src/main/java" />
+    <javaModelGenerator targetPackage="com.yoga.demo.domain.syslog" targetProject="myboot/src/main/java" />
       <!-- 
 
     	mapper xml自动生成
@@ -38,7 +38,7 @@
     	targetProject  生成xml的的项目路径
 
      -->
-    <sqlMapGenerator targetPackage="mapper.product" targetProject="springboot-demo/src/main/resources" />
+    <sqlMapGenerator targetPackage="mapper.sys" targetProject="myboot/src/main/resources" />
     <!-- 
 
     	mapper 接口自动生成
@@ -48,9 +48,9 @@
     	targetProject  生成接口的项目路径
 
      -->
-    <javaClientGenerator targetPackage="com.yoga.demo.mapper.product" targetProject="springboot-demo/src/main/java" type="XMLMAPPER" />
+    <javaClientGenerator targetPackage="com.yoga.demo.mapper.syslog" targetProject="myboot/src/main/java" type="XMLMAPPER" />
     <!-- table 建立表和domain之间的关系  % 代表所有domain对象 -->
-    <table schema="${mybatis.generatorConfig.schema}" tableName="product" domainObjectName="Product" enableCountByExample="false"  
+    <table schema="${mybatis.generatorConfig.schema}" tableName="sys_log" domainObjectName="SysLog" enableCountByExample="false"  
             enableDeleteByExample="false" enableSelectByExample="false"  
             enableUpdateByExample="false">
             
