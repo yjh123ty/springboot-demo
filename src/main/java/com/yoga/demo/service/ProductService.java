@@ -16,4 +16,6 @@ public interface ProductService {
 
 	void insert(Product product, List<String> images);
 
+	void deleteByPrimaryKey(Integer id);
+
 }

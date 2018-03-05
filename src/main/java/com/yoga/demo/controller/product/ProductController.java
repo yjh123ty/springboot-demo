@@ -19,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.yoga.demo.common.JsonMsgBean;
 import com.yoga.demo.common.Page;
+import com.yoga.demo.common.annotation.WebLog;
 import com.yoga.demo.domain.product.Product;
 import com.yoga.demo.domain.product.dto.SearchProductDTO;
 import com.yoga.demo.domain.shiro.SysPermission;
@@ -92,5 +93,14 @@ public class ProductController {
 		Product p = productService.selectByPrimaryKey(product.getId());
 		String image = p.getImage();
 		return JsonMsgBeanUtils.defaultSeccess(image);
+	}
+	
+	@RequestMapping(value = "delete",method = RequestMethod.POST)
+	@ResponseBody
+	@RequiresPermissions("product:del")
+	@WebLog(desc = "删除商品")
+	public JsonMsgBean delete(Integer id){
+		productService.deleteByPrimaryKey(id);
+		return JsonMsgBeanUtils.defaultSeccess();
 	}
 }

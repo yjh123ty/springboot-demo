@@ -51,5 +51,10 @@ public class ProductServiceImpl implements ProductService {
 			productMapper.saveImages(product.getId(), images);
 	}
 
+	@Override
+	public void deleteByPrimaryKey(Integer id) {
+		productMapper.deleteByPrimaryKey(id);
+	}
+
 	
 }
