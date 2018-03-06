@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.yoga.demo.common.JsonMsgBean;
 import com.yoga.demo.common.Page;
+import com.yoga.demo.common.annotation.WebLog;
 import com.yoga.demo.domain.dto.UserInfoSearchDTO;
 import com.yoga.demo.domain.shiro.SysRole;
 import com.yoga.demo.domain.shiro.UserInfo;
@@ -55,6 +56,7 @@ public class UserController {
 	@RequestMapping(value = "saveOrUpdate",method = RequestMethod.POST)
 	@ResponseBody
 	@RequiresPermissions("userInfo:edit")
+	@WebLog(desc = "用户编辑")
 	public JsonMsgBean saveOrUpdate(UserInfo userInfo, @RequestParam("roleIdArrays[]")List<Integer> roleIdArrays){
 		if(userInfo.getUid() != null){
 			userInfoService.update(userInfo, roleIdArrays);
@@ -87,6 +89,7 @@ public class UserController {
 	@RequestMapping(value = "delete",method = RequestMethod.POST)
 	@ResponseBody
 	@RequiresPermissions("userInfo:del")
+	@WebLog(desc = "用户删除")
 	public JsonMsgBean delete(Integer uid){
 		userInfoService.delete(uid);
 		return JsonMsgBeanUtils.defaultSeccess();
