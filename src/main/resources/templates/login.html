@@ -127,7 +127,7 @@
        					contentType : 'application/json',
        					success : function(resp){
        						if(resp.code == 0){
-       							app.alertOk('登录成功!');
+       							app.alertOk(resp.message);
            						setTimeout(function(){
            							location.href = "/";
            						}, 500);

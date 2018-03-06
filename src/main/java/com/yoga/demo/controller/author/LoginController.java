@@ -71,7 +71,7 @@ public class LoginController {
 			throw new AuthenticationException(e.getMessage());
 		}
 		
-	    return JsonMsgBeanUtils.defaultSeccess();
+	    return JsonMsgBeanUtils.success("登录成功!", null);
 	}
 	
 	@RequestMapping(value = "logout",method = RequestMethod.GET)
