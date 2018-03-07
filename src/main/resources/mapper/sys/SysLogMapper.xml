@@ -9,9 +9,10 @@
     <result column="description" property="description" jdbcType="VARCHAR" />
     <result column="uri" property="uri" jdbcType="VARCHAR" />
     <result column="request_body" property="requestBody" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, username, action, ip, description, uri, request_body
+    id, username, action, ip, description, uri, request_body, create_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -26,10 +27,10 @@
   <insert id="insert" parameterType="com.yoga.demo.domain.syslog.SysLog" >
     insert into sys_log (id, username, action, 
       ip, description, uri, 
-      request_body)
+      request_body, create_time)
     values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{action,jdbcType=VARCHAR}, 
       #{ip,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, #{uri,jdbcType=VARCHAR}, 
-      #{requestBody,jdbcType=VARCHAR})
+      #{requestBody,jdbcType=VARCHAR}, #{createTime})
   </insert>
   <insert id="insertSelective" parameterType="com.yoga.demo.domain.syslog.SysLog" >
     insert into sys_log
@@ -53,7 +54,10 @@
         uri,
       </if>
       <if test="requestBody != null" >
-        request_body
+        request_body,
+      </if>
+      <if test="createTime != null" >
+        create_time
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -76,7 +80,10 @@
         #{uri,jdbcType=VARCHAR},
       </if>
       <if test="requestBody != null" >
-        #{requestBody,jdbcType=VARCHAR}
+        #{requestBody,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime}
       </if>
     </trim>
   </insert>
