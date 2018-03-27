@@ -1,6 +1,8 @@
 package com.yoga.demo.utils.config;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
+import io.swagger.annotations.ApiOperation;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -10,6 +12,7 @@ import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @EnableSwagger2
+@Configuration // 让Spring来加载该类配置
 public class SwaggerConfig {
 
     @Bean
@@ -17,7 +20,9 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.yoga.demo"))
+                //.apis(RequestHandlerSelectors.basePackage("com.yoga.demo"))
+                // 扫描所有有注解的api，用这种方式更灵活
+                .apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
                 .paths(PathSelectors.any())
                 .build();
     }

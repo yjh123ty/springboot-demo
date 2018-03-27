@@ -26,10 +26,11 @@ import com.yoga.demo.utils.result.JsonMsgBeanUtils;
 import com.yoga.demo.utils.shiro.ShiroUtils;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 @Controller
 @RequestMapping("user")
-@Api("用户控制器")
+@Api("用户管理")
 public class UserController {
 	@Autowired
 	private UserInfoService userInfoService;
@@ -43,6 +44,7 @@ public class UserController {
         return "pages/user/userIndex";	
     }
 	
+	@ApiOperation(value = "查询所有的人员信息", notes = "查询所有的人员信息")
 	@RequestMapping(value = "users",method = RequestMethod.GET)
 	@ResponseBody
     public Page<UserInfo> listUsers(UserInfoSearchDTO userSearchDTO){

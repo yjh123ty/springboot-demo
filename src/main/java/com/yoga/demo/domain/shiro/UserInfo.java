@@ -4,6 +4,14 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+@ApiModel(value = "用户信息")
 public class UserInfo implements Serializable{
 	private static final long serialVersionUID = -4671554168993353373L;
 	
@@ -25,10 +33,18 @@ public class UserInfo implements Serializable{
 		Integer CHECKED = 3;
 	}
 	
+	@ApiModelProperty(value = "ID")
 	private Integer uid;
+	
+	@ApiModelProperty(value = "用户登录账号", required = true)
     private String username;//帐号
+	
+	@ApiModelProperty(value = "用户昵称", required = true)
     private String name;//名称（昵称或者真实姓名，不同系统不同定义）
+	
+	@ApiModelProperty(value = "密码", required = true)
     private String password; //密码
+	
     private String idNo;	//身份证号
     private String email;	//邮箱
     private String mobile;	//手机号
@@ -37,6 +53,9 @@ public class UserInfo implements Serializable{
     private String headIcon;	//头像
     
     private Boolean isDelete;
+    
+    @ApiModelProperty(value = "记录创建时间")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
     
     private List<SysRole> roleList;// 一个用户具有多个角色
@@ -125,6 +144,7 @@ public class UserInfo implements Serializable{
 	}
 	
 
+	@JsonFormat(locale = "zh", timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
 	public Date getCreateTime() {
 		return createTime;
 	}
