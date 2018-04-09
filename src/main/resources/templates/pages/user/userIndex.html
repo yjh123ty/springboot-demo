@@ -14,6 +14,12 @@
 					<div class="panel">
 								
 						<div style="margin-left:25px; padding-top: 25px; padding-bottom: 25px; height:60px">
+						
+							<div class="pull-left" style="margin-bottom: 10px">
+							  	<a href="#" onclick="onExportClick(this);" class="btn btn-default m-r-10">
+	                                <i class="zmdi zmdi-file"></i> 导出数据
+	                            </a>
+							</div>
 							<div class="pull-left" style="margin-right:35px">
                                    <select id="state" class="selectpicker" style="width:120px">
                                        <option value="">用户状态</option>
@@ -257,6 +263,23 @@
 				}
 		});
 	};
+	
+	var onExportClick = function(a){
+    	var url = "/user/users/download.html?v=2";
+    	var searchField = $("#searchField").val();
+        var searchPhase = $("#searchPhase").val();
+        if (searchField != '' && searchPhase != '') {
+        	url += "&"+searchField + "=" + $.trim(searchPhase);
+        }
+        
+        var state = $("#state").val();
+        if (state != '') {
+        	url += "&state=" + state;
+        }
+        location.href=url;
+        /* $("#downloadExcel").attr("href",url);
+        $("#downloadExcel").click(); */
+	}
 
 </script>
 </body>

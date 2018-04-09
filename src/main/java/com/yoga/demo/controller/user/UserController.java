@@ -1,6 +1,16 @@
 package com.yoga.demo.controller.user;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -96,5 +106,43 @@ public class UserController {
 		userInfoService.delete(uid);
 		return JsonMsgBeanUtils.defaultSeccess();
 	}
+	
+	/**
+     * 导出数据
+     * @param response
+     */
+    @RequestMapping(value="users/download")
+    @ResponseBody
+    public void downloadUsers(HttpServletResponse response, HttpServletRequest request, UserInfoSearchDTO searchDTO) {
+        OutputStream out = null;
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+            String title = "用户数据_".concat(sdf.format(new Date())).concat(".xlsx");
+            response.reset();
+            out = response.getOutputStream();
+            if (request.getHeader("User-Agent").toUpperCase().indexOf("MSIE") > 0) {  
+                response.setHeader("Content-Disposition", "attachment; filename=".concat(URLEncoder.encode(title, "UTF-8")));
+            } else {  
+                /*new String(title.getBytes("gb2312"), "ISO8859-1")*/
+                response.setHeader("Content-Disposition", "attachment; filename=".concat(new String(title.getBytes("UTF-8"), "ISO8859-1")));
+            }
+            Map<String, String> headerMap = new LinkedHashMap<String, String>();
+            headerMap.put("username", "账号");
+            headerMap.put("name", "用户名");
+            headerMap.put("password", "密码");
+            //导出数据
+            userInfoService.exportUsers(null, headerMap, searchDTO, out);
+        } catch (Exception e) {
+            e.printStackTrace(System.out);
+        } finally {
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 	
 }

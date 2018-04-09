@@ -144,7 +144,7 @@ public class ExcelUtils {
 		if(out != null) {
 //			System.out.println("dataset count is "+dataset.size());
 			if(StringUtils.isBlank(pattern)) {
-				pattern = "yyy-MM-dd";
+				pattern = "yyyy-MM-dd";
 			}
 			SimpleDateFormat sdf = new SimpleDateFormat(pattern);
 		    

@@ -1,6 +1,9 @@
 package com.yoga.demo.service;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -37,5 +40,7 @@ public interface UserInfoService {
 	 * @return
 	 */
 	String uploadHeadIcon(Integer uid, MultipartFile file);
+
+	void exportUsers(String title, Map<String, String> headerMap, UserInfoSearchDTO searchDTO, OutputStream out) throws IOException;
 
 }

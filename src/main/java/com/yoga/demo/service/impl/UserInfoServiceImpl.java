@@ -1,12 +1,17 @@
 package com.yoga.demo.service.impl;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,6 +26,7 @@ import com.yoga.demo.mapper.role.SysRoleMapper;
 import com.yoga.demo.mapper.user.UserInfoMapper;
 import com.yoga.demo.service.UserInfoService;
 import com.yoga.demo.utils.Tools;
+import com.yoga.demo.utils.poi.PageExcelUtil;
 import com.yoga.demo.utils.upload.ImageUploadUtils;
 
 @Service
@@ -138,6 +144,38 @@ public class UserInfoServiceImpl implements UserInfoService{
             uploadImgUrl = ImageUploadUtils.uploadImgDefault(file, dirPath);
 		}
 		return uploadImgUrl;
+	}
+
+	@Override
+	public void exportUsers(String title, Map<String, String> headerMap, UserInfoSearchDTO searchDTO,
+			OutputStream out) throws IOException {
+		searchDTO.setPageSize(PageExcelUtil.SUGGEST_EACH_PAGE_SIZE);
+		List<UserInfo> lists = null;
+		//最大允许页数
+		int maxPage = PageExcelUtil.SUGGEST_MAX_PAGE_SIZE / PageExcelUtil.SUGGEST_EACH_PAGE_SIZE;
+        int page = 1;
+        
+        PageExcelUtil pageExcelUtil = new PageExcelUtil(title, headerMap, UserInfo.class, "yyyy-MM-dd HH:mm:ss");
+        
+        do {
+        	searchDTO.setPageNumber(page);
+        	lists = userInfoMapper.listUsers(searchDTO);
+        	for (UserInfo item : lists) {
+        		//TODO: 格式处理，状态
+			}
+        	//excel分页
+        	if(CollectionUtils.isNotEmpty(lists) || page == 1){
+        		pageExcelUtil.appendExcel(page, lists);
+        		page++;
+        		if(lists.size() < PageExcelUtil.SUGGEST_EACH_PAGE_SIZE) {
+                    break;
+                }
+        	}
+        }
+        while(CollectionUtils.isNotEmpty(lists) || page <= maxPage);
+        
+        pageExcelUtil.printStream(out);
+		
 	}
 
 }
