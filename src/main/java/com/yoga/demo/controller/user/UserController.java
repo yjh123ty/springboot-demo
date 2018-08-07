@@ -144,5 +144,12 @@ public class UserController {
             }
         }
     }
+    
+    @RequestMapping(value="test")
+    @ResponseBody
+    public String testThreadResponse(String syncflag){
+    	userInfoService.updateByThread(syncflag);
+    	return "调用接口完成 　时间： " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+    }
 	
 }

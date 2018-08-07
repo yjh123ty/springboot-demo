@@ -43,4 +43,6 @@ public interface UserInfoService {
 
 	void exportUsers(String title, Map<String, String> headerMap, UserInfoSearchDTO searchDTO, OutputStream out) throws IOException;
 
+	void updateByThread(String syncflag);
+
 }

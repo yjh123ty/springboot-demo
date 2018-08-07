@@ -111,8 +111,8 @@
 	
 	<!-- 配置事务切点 -->
 	<aop:config>
-		<aop:pointcut id="needAuthControllerMethod"
-			expression="execution(* com.yoga.demo.controller..*(..))" />
+		<aop:pointcut expression="execution(* com.yoga.demo.service..*(..))" id="txPointCut"/>
+    	<aop:advisor advice-ref="txAdvice" pointcut-ref="txPointCut"/>
 	</aop:config>
 	
 	<!-- 接口注释类加载 -->	
