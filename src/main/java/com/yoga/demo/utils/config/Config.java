@@ -6,10 +6,13 @@ import org.springframework.context.annotation.Configuration;
 
 @ConfigurationProperties(prefix = "springdemo")
 @Configuration
+@Data
 public class Config {
 
+    private static Cfg cfg;
+
     @Data
-    public static class Cfg{
+    private static class Cfg{
         private String var1;
         private String var2;
         private String var3;
@@ -17,6 +20,7 @@ public class Config {
 
     public static void main(String[] args) {
 
+        System.out.println(Config.cfg.getVar1());
     }
 
 }
