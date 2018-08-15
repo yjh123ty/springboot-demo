@@ -9,18 +9,13 @@ import org.springframework.context.annotation.Configuration;
 @Data
 public class Config {
 
-    private static Cfg cfg;
+    public Cfg cfg;
 
     @Data
-    private static class Cfg{
+    public static class Cfg{
         private String var1;
         private String var2;
         private String var3;
-    }
-
-    public static void main(String[] args) {
-
-        System.out.println(Config.cfg.getVar1());
     }
 
 }
