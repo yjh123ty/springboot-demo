@@ -4,6 +4,9 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * 获取配置文件中指定的 参数
+ */
 @ConfigurationProperties(prefix = "springdemo")
 @Configuration
 @Data

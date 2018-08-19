@@ -1,13 +1,13 @@
 package com.yoga.demo;
 
+import com.yoga.demo.utils.wechat.SingleAccessToken;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-
-import com.yoga.demo.utils.wechat.SingleAccessToken;
 
 /**
  * 指定session失效时间 http://stackoverflow.com/questions/32501541/what-is-the-default-session-timeout-and-how-to-configure-it-when-using-the-sprin
@@ -21,6 +21,7 @@ import com.yoga.demo.utils.wechat.SingleAccessToken;
 //@EnableScheduling				//在启动类上面加上@EnableScheduling即可开启定时。
 @EnableTransactionManagement
 @ImportResource(locations = {"classpath:spring/spring-context.xml"})
+@ComponentScan(basePackages = {"com.yoga.demo"})
 public class DemoApplication{
 
 	public static void main(String[] args) {

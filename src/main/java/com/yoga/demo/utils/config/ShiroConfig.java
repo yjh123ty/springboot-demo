@@ -61,11 +61,12 @@ public class ShiroConfig {
 		filterChainDefinitionMap.put("/captcha/img.html", "anon");
 		filterChainDefinitionMap.put("/table/index", "anon");
 		filterChainDefinitionMap.put("/table/users", "anon");
-//		filterChainDefinitionMap.put("/swagger-resources/*", "anon");
-//		filterChainDefinitionMap.put("/v2/api-docs", "anon");
-//		filterChainDefinitionMap.put("/webjars/**", "anon");
-//		filterChainDefinitionMap.put("/swagger-ui.html", "anon");
-		
+		filterChainDefinitionMap.put("/swagger-resources/*", "anon");
+		filterChainDefinitionMap.put("/swagger-ui.html", "anon");
+		filterChainDefinitionMap.put("/v2/api-docs", "anon");
+		filterChainDefinitionMap.put("/webjars/**", "anon");
+		filterChainDefinitionMap.put("/manager/test/**", "anon");
+
 		//配置退出 过滤器,其中的具体的退出代码Shiro已经替我们实现了
 		filterChainDefinitionMap.put("/logout", "logout");
 		
