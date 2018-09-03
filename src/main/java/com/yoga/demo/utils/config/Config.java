@@ -1,6 +1,7 @@
 package com.yoga.demo.utils.config;
 
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
@@ -22,5 +23,21 @@ public class Config {
         private String var2;
         private String var3;
     }
+
+    @Data
+    public static class CommonMapInProp {
+        private String appkey;
+        private String secret;
+    }
+
+//    public void print(){
+//        for (Map.Entry<String, CommonMapInProp> e : configInProp.entrySet()) {
+//            System.out.println("CommonMapInProp -- >　key : " + e.getKey());
+//            System.out.println("CommonMapInProp -- >　value : " + e.getValue());
+//            System.out.println("-------");
+//        }
+//    }
+
+
 
 }

@@ -3,6 +3,8 @@ package com.yoga.demo.web.filter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 /**
  * Spring Boot自动添加了OrderedCharacterEncodingFilter和HiddenHttpMethodFilter，并且我们可以自定义Filter。
@@ -14,8 +16,19 @@ import org.springframework.context.annotation.Configuration;
  * 
  * @author yoga
  */
-//@Configuration
-public class WebConfiguration {
+@Configuration
+public class WebMvcConfig  extends WebMvcConfigurerAdapter {
+
+	@Override
+	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+		registry.addResourceHandler("swagger-ui.html")
+				.addResourceLocations("classpath:/META-INF/resources/");
+
+		registry.addResourceHandler("/webjars/**")
+				.addResourceLocations("classpath:/META-INF/resources/webjars/");
+	}
+
+
 //	@Bean
 //    public RemoteIpFilter remoteIpFilter() {
 //        return new RemoteIpFilter();

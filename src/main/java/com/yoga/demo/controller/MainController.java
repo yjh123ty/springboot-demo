@@ -1,6 +1,7 @@
 package com.yoga.demo.controller;
 
 import com.yoga.demo.utils.config.Config;
+import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
+@Api(value = "主页接口", description = "")
 public class MainController {
 
 	private Logger log = LoggerFactory.getLogger(this.getClass());

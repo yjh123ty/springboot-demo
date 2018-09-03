@@ -1,8 +1,9 @@
 package com.yoga.demo.utils.config;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -13,10 +14,12 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @EnableSwagger2
 @Configuration // 让Spring来加载该类配置
+@Slf4j
 public class SwaggerConfig {
 
     @Bean
     public Docket createRestApi() {
+        log.info("start create swagger ...");
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
@@ -29,9 +32,9 @@ public class SwaggerConfig {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("测试demo接口文档")
+                .title("CRM项目示例 微服务程序")
                 .version("1.0")
-                .description("所有编码UTF_8")
+                .description("所有编码UTF_8，采用权限框架 shiro")
                 .build();
     }
 }

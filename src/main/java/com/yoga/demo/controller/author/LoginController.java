@@ -2,6 +2,7 @@ package com.yoga.demo.controller.author;
 
 import javax.servlet.http.HttpSession;
 
+import io.swagger.annotations.Api;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
@@ -28,6 +29,7 @@ import com.yoga.demo.utils.shiro.ShiroUtils;
 
 
 @Controller
+@Api(value = "登录接口", description = "")
 public class LoginController {
 	@Autowired
 	private SysMenuService sysMenuService;

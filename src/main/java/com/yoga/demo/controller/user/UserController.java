@@ -1,28 +1,5 @@
 package com.yoga.demo.controller.user;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.URLEncoder;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
-
 import com.yoga.demo.common.JsonMsgBean;
 import com.yoga.demo.common.Page;
 import com.yoga.demo.common.annotation.WebLog;
@@ -34,13 +11,30 @@ import com.yoga.demo.service.SysRoleService;
 import com.yoga.demo.service.UserInfoService;
 import com.yoga.demo.utils.result.JsonMsgBeanUtils;
 import com.yoga.demo.utils.shiro.ShiroUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("user")
-@Api("用户管理")
 public class UserController {
 	@Autowired
 	private UserInfoService userInfoService;
@@ -54,7 +48,7 @@ public class UserController {
         return "pages/user/userIndex";	
     }
 	
-	@ApiOperation(value = "查询所有的人员信息", notes = "查询所有的人员信息")
+
 	@RequestMapping(value = "users",method = RequestMethod.GET)
 	@ResponseBody
     public Page<UserInfo> listUsers(UserInfoSearchDTO userSearchDTO){
