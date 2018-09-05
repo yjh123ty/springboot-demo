@@ -32,14 +32,4 @@ public class Config {
         private String secret;
     }
 
-//    public void print(){
-//        for (Map.Entry<String, CommonMapInProp> e : configInProp.entrySet()) {
-//            System.out.println("CommonMapInProp -- >　key : " + e.getKey());
-//            System.out.println("CommonMapInProp -- >　value : " + e.getValue());
-//            System.out.println("-------");
-//        }
-//    }
-
-
-
 }
