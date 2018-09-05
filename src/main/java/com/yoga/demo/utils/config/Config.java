@@ -17,6 +17,8 @@ public class Config {
 
     public Cfg cfg;
 
+    public Map<String, CommonMapInProp> commonMapInProp;
+
     @Data
     public static class Cfg{
         private String var1;

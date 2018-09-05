@@ -15,8 +15,8 @@ import java.util.Map;
 @RequestMapping("manager/test")
 public class ManagerController {
 
-//    @Value("#{config.commonMapInProp}")
-//    public Map<String, Config.CommonMapInProp> commonMapInProp;
+    @Value("#{config.commonMapInProp}")
+    public Map<String, Config.CommonMapInProp> commonMapInProp;
 
     @Autowired
     private ServiceManager serviceManager;
@@ -34,9 +34,9 @@ public class ManagerController {
     @SignRequired("xxx")
     @ResponseBody
     public String testSign(){
-//        Config.CommonMapInProp jk = commonMapInProp.get("JK");
-//        System.out.println(jk.getAppkey());
-//        System.out.println(jk.getSecret());
+        Config.CommonMapInProp jk = commonMapInProp.get("JK");
+        System.out.println(jk.getAppkey());
+        System.out.println(jk.getSecret());
         return "var1: " + config.cfg.getVar1();
     }
 
