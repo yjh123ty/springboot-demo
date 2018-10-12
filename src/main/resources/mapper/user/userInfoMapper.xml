@@ -164,7 +164,9 @@
         LEFT JOIN sys_role i ON i.id = ur.role_id 
 		where u.uid = #{uid} AND is_delete = 0 
     </select>
-    
-    	
+
+	<select id="listAllUsers" resultMap="userMap" >
+		select * from user_info
+	</select>
 
 </mapper>

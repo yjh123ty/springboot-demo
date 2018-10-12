@@ -45,4 +45,6 @@ public interface UserInfoService {
 
 	void updateByThread(String syncflag);
 
+	List<UserInfo> listAllUser();
+
 }

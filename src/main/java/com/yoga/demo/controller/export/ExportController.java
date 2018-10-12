@@ -1,7 +1,3 @@
-/*
- * OnFintech
- * Copyright (c) 2018.客如云 All Rights Reserved.
- */
 package com.yoga.demo.controller.export;
 
 
@@ -44,15 +40,14 @@ public class ExportController {
 
   @RequestMapping(value = "/userInfo", method = RequestMethod.GET)
   public void getAuditOrderStatus(HttpServletResponse response) {
-    String fileName = "用户信息.xls";
+    String fileName = "userinfos.xls";
     response.setContentType("application/ms-excel");
     response.setHeader("Content-Disposition", "attachment;Filename=" + fileName);
     try {
-      UserInfo user = userInfoService.findByUsername("yjh");
-      List data = Lists.newArrayList(user);
+      List<UserInfo> userInfos = userInfoService.listAllUser();
       //将list转为map
       List newList = new ArrayList();
-      data.forEach(vo->{
+      userInfos.forEach(vo->{
         Map mapvo = org.springframework.cglib.beans.BeanMap.create(vo);
         newList.add(mapvo);
       });

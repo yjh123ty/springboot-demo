@@ -34,4 +34,6 @@ public interface UserInfoMapper {
 	UserInfo findUserInfoByUsername(String username);
 
 	void deleteUserRole(Integer uid);
+
+	List<UserInfo> listAllUsers();
 }

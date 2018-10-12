@@ -225,8 +225,13 @@ public class UserInfoServiceImpl implements UserInfoService{
 		
 		
 	}
-	
-	
+
+	@Override
+	public List<UserInfo> listAllUser() {
+		return userInfoMapper.listAllUsers();
+	}
+
+
 	public class TaskHandler implements Callable{
 		private int operate;
 		
