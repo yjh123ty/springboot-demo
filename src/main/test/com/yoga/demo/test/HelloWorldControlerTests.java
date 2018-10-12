@@ -1,5 +1,6 @@
 package com.yoga.demo.test;
 
+import com.yoga.demo.BaseTest;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,10 +18,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import com.yoga.demo.controller.test.HelloWorldController;
 import com.yoga.demo.mapper.user.UserInfoMapper;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest
-@WebAppConfiguration
-public class HelloWorldControlerTests {
+public class HelloWorldControlerTests extends BaseTest {
 	private MockMvc mvc;
 	
 //	@Autowired
