@@ -89,7 +89,7 @@ public class UserController {
 	
 	/**
 	 * 删除用户
-	 * @param userInfo
+	 * @param uid
 	 * @return
 	 */
 	@RequestMapping(value = "delete",method = RequestMethod.POST)

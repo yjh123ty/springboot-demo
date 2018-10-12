@@ -1,15 +1,23 @@
 package com.yoga.demo.utils.poi;
 
+import cn.afterturn.easypoi.excel.ExcelExportUtil;
+import cn.afterturn.easypoi.excel.entity.ExportParams;
+import cn.afterturn.easypoi.excel.entity.params.ExcelExportEntity;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
 import org.apache.poi.hwpf.HWPFDocument;
 import org.apache.poi.hwpf.usermodel.Range;
+import org.apache.poi.ss.formula.functions.T;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
 
 /**
@@ -17,7 +25,17 @@ import org.springframework.util.ResourceUtils;
  * 
  * @author yoga
  */
+@Component
 public class ExportUtils {
+
+	public void exportExcel(List<T> dataList, String fileName, String title, String sheetName, List<ExcelExportEntity> dynamicColumn, HttpServletResponse response) throws Exception{
+		OutputStream os = response.getOutputStream();
+		ExportParams params   = new ExportParams(title,sheetName);
+		Workbook workbook = ExcelExportUtil.exportExcel(params,dynamicColumn,dataList);
+		workbook.write(os);
+		os.flush();
+		os.close();
+	}
 	
 	/**
 	 * 导出
