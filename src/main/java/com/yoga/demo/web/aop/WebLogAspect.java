@@ -6,6 +6,7 @@ import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
@@ -14,6 +15,7 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -35,6 +37,9 @@ import net.sf.json.JSONObject;
 @Component
 public class WebLogAspect {
 	private static Logger logger = LoggerFactory.getLogger(WebLogAspect.class);
+
+	@Value("${spring.profiles.active}")
+    private String env;
 	
 	@Autowired
 	private SysLogService sysLogService;
@@ -48,9 +53,14 @@ public class WebLogAspect {
         // 接收到请求，记录请求内容
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
+        if (StringUtils.equals(env, "dev")){
+            // 记录下请求内容
+            pringLog(joinPoint, request);
+        }
 
-        // 记录下请求内容
-        
+    }
+
+    private void pringLog(JoinPoint joinPoint, HttpServletRequest request){
         logger.info("*********【start LOG】**********");
         logger.info("URL : " + request.getRequestURL().toString());
         logger.info("HTTP_METHOD : " + request.getMethod());
@@ -58,7 +68,6 @@ public class WebLogAspect {
         logger.info("CLASS_METHOD : " + joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName());
         logger.info("ARGS : " + Arrays.toString(joinPoint.getArgs()));
         logger.info("*********【END LOG】**********");
-
     }
 	
 	

@@ -64,13 +64,13 @@ public class LoginController {
 			session.setAttribute("loginUser", findByUsername);
 		} catch (UnknownAccountException e) {
 			e.printStackTrace();
-			throw new UnknownAccountException("账号不存在！");
+			return JsonMsgBeanUtils.authFail("账号不存在！");
 		}catch (IncorrectCredentialsException e) {
 			e.printStackTrace();
-			throw new IncorrectCredentialsException(e.getMessage());
+			return JsonMsgBeanUtils.authFail(e.getMessage());
 		}catch (AuthenticationException e) {
 			e.printStackTrace();
-			throw new AuthenticationException(e.getMessage());
+			return JsonMsgBeanUtils.authFail(e.getMessage());
 		}
 		
 	    return JsonMsgBeanUtils.success("登录成功!", null);
