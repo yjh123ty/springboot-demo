@@ -1,6 +1,7 @@
 package com.yoga.demo.test;
 
 import com.yoga.demo.BaseTest;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ public class UserServiceTest extends BaseTest {
 	
 	
 	@Test
+	@Ignore()
 	public void testUser() throws Exception {
 		UserInfo user = userInfoService.findByUsername("admin");
 		System.err.println(user);

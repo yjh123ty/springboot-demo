@@ -3,6 +3,7 @@ package com.yoga.demo.mapper.cache;
 import static org.junit.Assert.*;
 
 import org.apache.catalina.core.ApplicationContext;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import com.yoga.demo.BaseTest;
 import com.yoga.demo.domain.product.Product;
 import com.yoga.demo.mapper.product.ProductMapper;
 
+@Ignore
 public class RedisDaoTest extends BaseTest{
 	
 	private int id = 1;

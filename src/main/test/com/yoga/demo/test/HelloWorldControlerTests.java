@@ -2,6 +2,7 @@ package com.yoga.demo.test;
 
 import com.yoga.demo.BaseTest;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,8 @@ public class HelloWorldControlerTests extends BaseTest {
     public void setUp() throws Exception {
         mvc = MockMvcBuilders.standaloneSetup(new HelloWorldController()).build();
     }
-    @Test
+    @Test()
+    @Ignore
     public void getMVCResult() throws Exception {
     mvc.perform(MockMvcRequestBuilders.get("/login").accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())

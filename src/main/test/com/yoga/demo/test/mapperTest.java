@@ -1,16 +1,10 @@
 package com.yoga.demo.test;
 
-import static org.junit.Assert.*;
-
 import com.yoga.demo.BaseTest;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
-
 import com.yoga.demo.mapper.order.OrderItemMapper;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class mapperTest extends BaseTest {
 	
@@ -18,6 +12,7 @@ public class mapperTest extends BaseTest {
 	OrderItemMapper itemMapper;
 	
 	@Test
+	@Ignore
 	public void testName() throws Exception {
 		System.err.println(itemMapper.selectByPrimaryKey(1));
 	}

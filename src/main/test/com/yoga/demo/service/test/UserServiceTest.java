@@ -1,33 +1,37 @@
 package com.yoga.demo.service.test;
 
-import static org.junit.Assert.*;
+import com.yoga.demo.BaseTestNG;
+import com.yoga.demo.domain.shiro.UserInfo;
+import com.yoga.demo.service.UserInfoService;
+import org.apache.shiro.util.Assert;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
+import org.testng.annotations.Test;
 
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+public class UserServiceTest extends BaseTestNG {
 
-import com.yoga.demo.BaseTest;
-import com.yoga.demo.service.UserInfoService;
-
-public class UserServiceTest extends BaseTest {
-	
 	@Autowired
 	private UserInfoService userInfoService;
-	
+
 	private ExecutorService executors = Executors.newCachedThreadPool();
 
 	@Test
-	public void testName() throws Exception {
-		userInfoService.delete(20);
-		
-//		Future submit = executors.submit(new TaskHandler(1));
-		System.err.println("task over ...");
-		
+	public void findByUsernameTest(){
+		UserInfo yu = userInfoService.findByUsername("yu");
+//		Assert.notNull(yu, "查询的用户不存在!");
+		System.err.println("findByUsernameTest --> " + yu);
 	}
-	
-	
+
+	@Test
+//	@Rollback(false) //添加此行，不然不会做commit
+	public void testDelete() throws Exception {
+		userInfoService.delete(20);
+		System.err.println("testDelete --> delete userId :" + 20);
+
+	}
+
+
 }
