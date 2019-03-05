@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  * 
  */
 @SpringBootApplication
-@EnableRedisHttpSession(maxInactiveIntervalInSeconds = 1200) //1分钟失效 springSessionRepositoryFilte
+@EnableRedisHttpSession(maxInactiveIntervalInSeconds = 1200) //2分钟失效 60 * 2  springSessionRepositoryFilte
 @MapperScan("com.yoga.demo.mapper")	//扫描指定包下的注解
 //@EnableScheduling				//在启动类上面加上@EnableScheduling即可开启定时。
 @EnableTransactionManagement

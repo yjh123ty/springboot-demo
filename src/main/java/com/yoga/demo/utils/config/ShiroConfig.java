@@ -1,9 +1,10 @@
 package com.yoga.demo.utils.config;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.yoga.demo.domain.shiro.SysPermission;
+import com.yoga.demo.service.SysPermissionService;
+import com.yoga.demo.service.impl.SysPermissionServiceImpl;
+import com.yoga.demo.web.filter.shiro.MyShiroRealm;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.cache.MemoryConstrainedCacheManager;
@@ -11,18 +12,23 @@ import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 
-import com.yoga.demo.domain.shiro.SysPermission;
-import com.yoga.demo.service.SysPermissionService;
-import com.yoga.demo.service.impl.SysPermissionServiceImpl;
-import com.yoga.demo.web.filter.shiro.MyShiroRealm;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 @Configuration
+@Slf4j
 public class ShiroConfig {
+
+	@Value("${show.env}")
+	private String env;
+
 	/**
 	 * ShiroFilterFactoryBean 处理拦截资源文件问题。
 	 * 注意：单独一个ShiroFilterFactoryBean配置是会报错的，因为在
@@ -36,10 +42,10 @@ public class ShiroConfig {
     public SysPermissionService permissionService() {
         return new SysPermissionServiceImpl();
     }
-	
-	@Bean
-	public ShiroFilterFactoryBean shirFilter(SecurityManager securityManager) {
-		System.err.println("ShiroConfiguration.shirFilter()");
+
+	@Bean("shiroFilter")
+	public ShiroFilterFactoryBean shiroFilter(SecurityManager securityManager) {
+		System.err.println("ShiroConfiguration.shiroFilter()");
 		ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
 		shiroFilterFactoryBean.setSecurityManager(securityManager);
 		//拦截器.
@@ -86,15 +92,21 @@ public class ShiroConfig {
 				System.err.println("设置系统权限  ===> " + sysPermission.getUrl() + " : " + perms);
 			}
 		}
-		
+
 //		filterChainDefinitionMap.put("/test/userAdd", "roles[admin]");
 //		filterChainDefinitionMap.put("/test/userDel", "roles[admin]");
 		
 		//<!-- 过滤链定义，从上向下顺序执行，一般将/**放在最为下边 -->:这是一个坑呢，一不小心代码就不好使了;
 		//<!-- authc:所有url都必须认证通过才可以访问; anon:所有url都都可以匿名访问-->
-		filterChainDefinitionMap.put("/**", "authc");
-		
-		
+//		filterChainDefinitionMap.put("/**", "authc");
+
+		if (env.equalsIgnoreCase("env-dev")){
+			filterChainDefinitionMap.put("/**", "anon");
+		} else {
+			filterChainDefinitionMap.put("/**", "authc");
+		}
+		log.info(" **************  working env is :  --->  {}  **************", env);
+
 		shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
 		return shiroFilterFactoryBean;
 	}
@@ -104,7 +116,7 @@ public class ShiroConfig {
      */
     @Bean(name = "lifecycleBeanPostProcessor")
     @ConditionalOnMissingBean
-    public LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
+    public static LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
         return new LifecycleBeanPostProcessor();
     }
 
