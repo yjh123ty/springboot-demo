@@ -58,6 +58,9 @@ public class LoginController {
 			session.setAttribute("menus", sysMenuService.getUserMenusByLoginUser(userLogin.getLoginName()));
 			//获取登录用户信息
 			UserInfo findByUsername = userService.findUserInfoByUsername(userLogin.getLoginName());
+
+			if (findByUsername == null)
+				return JsonMsgBeanUtils.authFail("登录失败!请检查用户名或密码");
 			//在shiro会话中设置的userInfo.暂时没用到
 			ShiroUtils.setSessionAttribute(Constants.LOGIN_USER.concat("-").concat(String.valueOf(findByUsername.getUid())), findByUsername);
 			//前端页面获取的userInfo

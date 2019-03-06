@@ -37,7 +37,7 @@
 								<div class="logo text-center"><img src="../static/assets/img/logo-dark.png" alt="Klorofil Logo"></div>
 								<p class="lead">Register for your account</p>
 							</div>
-							<form class="form-auth-small" >
+							<form class="form-auth-small">
 								<div class="form-group">
 									<label class="control-label sr-only">用户名</label>
 									<input type="text" class="form-control" id="loginName" placeholder="用户名" onblur="checkName()">
@@ -131,11 +131,6 @@
 				app.alertErr("两次输入密码不相同！");
 				return false;
 			}
-			//TODO:暂时关闭验证码，方便开发调试
-// 			if($('#code').val() == ''){
-// 				app.alertErr("验证码不能为空！");
-// 				return false;
-// 			}
 			return true;
 		}
 		
@@ -152,13 +147,13 @@
         	 if(checkParams()){
         		   var data = {
      	        		loginName : $('#loginName').val(),
-     	        		password : $('#password').val(),
-     	        		code : $('#code').val()
+     	        		password : $('#password').val()
      	        	};
        	        	app.ajax({
        	        		url : '/register/doRegister',
        	        		type : 'POST',
-       	        		data : data,
+       	        		data : JSON.stringify(data),
+                        contentType : 'application/json',
        					success : function(resp){
        						if(resp.code == 0){
        							app.alertOk('注册成功!');
