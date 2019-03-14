@@ -16,7 +16,7 @@ public abstract class GeneralException extends RuntimeException {
 	private String errorMessageKey;
 	private List<Object> messageArgs;
 		
-	public abstract byte buildErrorCode();
+	public abstract Integer buildErrorCode();
 	
 	public GeneralException(String errorMessageKey, Throwable e) {
 		super(errorMessageKey, e);

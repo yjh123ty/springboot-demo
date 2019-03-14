@@ -31,7 +31,7 @@ public class BusinessException extends GeneralException {
 	}
 	
 	@Override
-	public byte buildErrorCode() {
+	public Integer buildErrorCode() {
 		return 3;
 	}
 

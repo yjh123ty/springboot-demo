@@ -1,9 +1,13 @@
 package com.yoga.demo.controller.product;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
+import com.yoga.demo.common.JsonMsgBean;
+import com.yoga.demo.common.Page;
+import com.yoga.demo.common.annotation.WebLog;
+import com.yoga.demo.domain.product.Product;
+import com.yoga.demo.domain.product.dto.SearchProductDTO;
+import com.yoga.demo.service.ProductService;
+import com.yoga.demo.utils.result.JsonMsgBeanUtils;
+import com.yoga.demo.utils.upload.ImageUploadUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,16 +21,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.yoga.demo.common.JsonMsgBean;
-import com.yoga.demo.common.Page;
-import com.yoga.demo.common.annotation.WebLog;
-import com.yoga.demo.domain.product.Product;
-import com.yoga.demo.domain.product.dto.SearchProductDTO;
-import com.yoga.demo.domain.shiro.SysPermission;
-import com.yoga.demo.service.ProductService;
-import com.yoga.demo.utils.result.JsonMsgBeanUtils;
-import com.yoga.demo.utils.shiro.ShiroUtils;
-import com.yoga.demo.utils.upload.ImageUploadUtils;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * 商品
@@ -48,12 +45,27 @@ public class ProductController {
 		return modelAndView;
 	}
 	
+	@RequestMapping(value = "getOne",method = RequestMethod.GET)
+	@ResponseBody
+    public JsonMsgBean listProducts(@RequestParam Integer id){
+		if (id != null){
+			Product product = productService.selectByPrimaryKey(id);
+			if (product != null){
+				return JsonMsgBeanUtils.defaultSeccess(product);
+			}else {
+				return JsonMsgBeanUtils.fail("未找到该商品", 404);
+			}
+		}else{
+			return JsonMsgBeanUtils.fail("请输入id", 401);
+		}
+    }
+
 	@RequestMapping(value = "products",method = RequestMethod.GET)
 	@ResponseBody
-    public Page<Product> listProducts(SearchProductDTO searchProductDTO){
+	public Page<Product> listProducts(SearchProductDTO searchProductDTO){
 		Page<Product> page = productService.listProducts(searchProductDTO);
 		return page;
-    }
+	}
 	
 	@RequestMapping(value = "edit",method = RequestMethod.GET)
     public ModelAndView toEdit(Integer id, Model model){

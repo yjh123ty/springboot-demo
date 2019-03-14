@@ -11,7 +11,7 @@ public class NotAuthorityException extends BusinessException {
 	}
 	
 	@Override
-	public byte buildErrorCode() {
+	public Integer buildErrorCode() {
 		return CodeConstants.ERROR_CODE_NOT_AUTHORITY;
 	}
 

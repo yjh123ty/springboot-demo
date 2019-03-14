@@ -6,18 +6,18 @@ import com.yoga.demo.common.JsonMsgBean;
 public class JsonMsgBeanUtils {
 	
 	public static JsonMsgBean defaultSeccess(){
-		return new JsonMsgBean(true, null, (byte) 0 ,null);
+		return new JsonMsgBean(true, null, 0 ,null);
 	}
 	
 	public static JsonMsgBean defaultSeccess(Object data){
-		return new JsonMsgBean(true, null, (byte) 0 ,data);
+		return new JsonMsgBean(true, null, 0 ,data);
 	}
 	
 	public static JsonMsgBean success(String message, Object data){
-		return new JsonMsgBean(true, message, (byte) 0 ,data);
+		return new JsonMsgBean(true, message, 0 ,data);
 	}
 	
-	public static JsonMsgBean fail(String message, byte errorCode){
+	public static JsonMsgBean fail(String message, Integer errorCode){
 		return new JsonMsgBean(false, message, errorCode ,null);
 	}
 	

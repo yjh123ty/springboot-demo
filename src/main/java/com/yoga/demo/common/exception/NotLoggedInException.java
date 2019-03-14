@@ -12,7 +12,7 @@ public class NotLoggedInException extends BusinessException {
 	}
 	
 	@Override
-	public byte buildErrorCode() {
+	public Integer buildErrorCode() {
 		return CodeConstants.ERROR_CODE_NOT_LOGGED_IN;
 	}
 

@@ -46,7 +46,7 @@ public class WeChatUtils {
 	public static AccessToken getAccessToken(){
 		AccessToken accessToken = null;  
 		
-		String url = ACCESS_TOKEN_URL.replace("APPID", "wx2599be431fee2f22").replace("APPSECRET", "7089edffe40bcb4341ba045b665d48f4");
+		String url = ACCESS_TOKEN_URL.replace("APPID", "wxe216231d07e1066a").replace("APPSECRET", "e4ca846ef03e3ffd563a934ff6bad75d");
 		String response = HttpUtils.get(url);
 		JSONObject jsonObject = JSONObject.fromObject(response);
 		// 如果请求成功  

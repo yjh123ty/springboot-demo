@@ -100,7 +100,7 @@ public class MailController {
         catch(Exception ex)  
         {  
         	ex.printStackTrace();
-        	JsonMsgBean resultMsg = JsonMsgBeanUtils.fail("邮件发送失败！", new Byte("9"));
+        	JsonMsgBean resultMsg = JsonMsgBeanUtils.fail("邮件发送失败！", 9);
             return resultMsg;  
         }  
     }  

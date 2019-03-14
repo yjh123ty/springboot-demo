@@ -6,19 +6,19 @@ public class JsonMsgBean extends JSON {
 
     private Boolean success;// 是否成功
     private String message;// 消息
-    private byte code;// 状态码
+    private Integer code;// 状态码
     private Object data;// 返回对象
 
     public JsonMsgBean() {
     }
 
-    public JsonMsgBean(Boolean success, String message ,byte code) {
+    public JsonMsgBean(Boolean success, String message ,Integer code) {
         this.success = success;
         this.code = code;
         this.message = message;
     }
 
-    public JsonMsgBean(Boolean success, String msg, byte code, Object data) {
+    public JsonMsgBean(Boolean success, String msg, Integer code, Object data) {
         this.success = success;
         this.message = msg;
         this.code = code;
@@ -49,11 +49,11 @@ public class JsonMsgBean extends JSON {
         this.data = data;
     }
     
-    public byte getCode() {
+    public Integer getCode() {
 		return code;
 	}
 
-	public void setCode(byte code) {
+	public void setCode(Integer code) {
 		this.code = code;
 	}
 
